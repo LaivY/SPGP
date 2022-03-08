@@ -1,4 +1,4 @@
-package com.example.game;
+package com.laivy.game;
 
 import android.content.Context;
 
