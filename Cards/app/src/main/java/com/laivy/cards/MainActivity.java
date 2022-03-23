@@ -4,11 +4,15 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -28,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton prevClickedCardBtn;
     private TextView scoreTextView;
     private int flips;
+    private int openCardCount;  // 남은 카드 개수
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,11 +45,27 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startGame() {
+        // 카드 섞기
+        Random random = new Random();
+        for (int i = 0; i < resIds.length; ++i) {
+            int t = random.nextInt(resIds.length);
+            int id = resIds[i];
+            resIds[i] = resIds[t];
+            resIds[t] = id;
+        }
+
+        // 카드를 뒷면으로 보이게하기
         for (int i = 0; i < CARD_IDS.length; ++i) {
             int resId = resIds[i];
             ImageButton btn = findViewById(CARD_IDS[i]);
+            btn.setVisibility(View.VISIBLE);
+            btn.setImageResource(R.mipmap.card_blue_back);
             btn.setTag(resId);
         }
+
+        // 변수 초기화
+        prevClickedCardBtn = null;
+        openCardCount = resIds.length;
         setScore(0);
     }
 
@@ -56,15 +77,15 @@ public class MainActivity extends AppCompatActivity {
     private void askRetry() {
         // 빌더 패턴을 사용할때는 아래와 같이 사용한다.
         new AlertDialog.Builder(this)
-                .setTitle("Restart")
-                .setMessage("Do you want to restart game?")
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                .setTitle(R.string.restart)
+                .setMessage(R.string.restart_alert_msg)
+                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         startGame();
                     }
                 })
-                .setNegativeButton("No", null)
+                .setNegativeButton(R.string.no, null)
                 .create()
                 .show();
     }
@@ -79,7 +100,10 @@ public class MainActivity extends AppCompatActivity {
 
         // 방금 선택한 버튼과 같은 버튼이라면 무시
         if (imageButton == prevClickedCardBtn) {
-            Log.v(TAG, "Ignore!");
+            Log.v(TAG, "Same Button!");
+
+            // 잠깐 보여주는 메시지
+            Toast.makeText(this, R.string.same_card_toast, Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -109,13 +133,21 @@ public class MainActivity extends AppCompatActivity {
         } else {
             imageButton.setVisibility(View.INVISIBLE);
             prevClickedCardBtn.setVisibility(View.INVISIBLE);
+            openCardCount -= 2;
+            if (openCardCount == 0) {
+                askRetry();
+            }
             prevClickedCardBtn = null;
         }
     }
 
     private void setScore(int flips) {
         this.flips = flips;
-        scoreTextView.setText("Flips: " + this.flips);
+
+        Resources res = getResources();
+        String fmt = res.getString(R.string.flips_fmt);
+        String text = String.format(fmt, flips);
+        scoreTextView.setText(text);
     }
 
     private int FindCardBtnIndex(int id) {
