@@ -34,7 +34,7 @@
             android:onClick="onCheckbox"
             />
         <com.laivy.morecontrols.GameView
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="100dp"
             android:layout_weight="1"
             android:padding="10dp"
@@ -42,10 +42,10 @@
     </LinearLayout>
     <com.laivy.morecontrols.GameView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:layout_weight="1"
-        android:paddingLeft="30dp"
-        android:paddingRight="100dp"
+        android:paddingStart="100dp"
+        android:paddingEnd="100dp"
         android:paddingTop="50dp"
         android:paddingBottom="40dp"
         android:background="#ccf"

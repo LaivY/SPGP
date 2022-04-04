@@ -1,27 +1,17 @@
 package com.laivy.morecontrols;
 
 import android.content.Context;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.View;
 
 import androidx.annotation.Nullable;
 
 public class GameView extends View {
-    private Paint paint = new Paint();
-    private Bitmap soccerBitmap;
-    private Rect soccerSrcRect = new Rect();
-    private Rect soccerDstRect = new Rect();
-    private Paint leftCirclePaint = new Paint();
-    private Paint rightCirclePaint = new Paint();
-    private Paint textPaint = new Paint();
-    private Rect textExtentRect = new Rect();
+    private Paint bgrPaint = new Paint();
+    private Paint[] shapePaints = new Paint[9];
 
     public GameView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -29,16 +19,21 @@ public class GameView extends View {
     }
 
     private void initView() {
-        paint.setColor(0xFFCCCCCC);
-        leftCirclePaint.setColor(Color.BLUE);
-        rightCirclePaint.setColor(Color.RED);
-        rightCirclePaint.setStyle(Paint.Style.STROKE);
-        rightCirclePaint.setStrokeWidth(10);
-        textPaint.setColor(Color.GREEN);
-        textPaint.setTextSize(50);
-        Resources res = getResources();
-        soccerBitmap = BitmapFactory.decodeResource(res, R.mipmap.soccer_ball_240);
-        soccerSrcRect.set(0, 0, soccerBitmap.getWidth(), soccerBitmap.getHeight());
+        // 배경 페인트 설정
+        bgrPaint.setColor(0xFFFFC0CB);
+
+        // 도형을 그릴 페인트 생성 및 설정
+        for (int i = 0; i < shapePaints.length; ++i)
+            shapePaints[i] = new Paint();
+        shapePaints[0].setColor(Color.WHITE);   // 왼쪽 위
+        shapePaints[1].setColor(Color.RED);     // 가운데 위
+        shapePaints[2].setColor(0xFFFF7F00);    // 오른쪽 위
+        shapePaints[3].setColor(Color.YELLOW);  // 왼쪽 중앙
+        shapePaints[4].setColor(Color.GREEN);   // 정중앙
+        shapePaints[5].setColor(Color.BLUE);    // 오른쪽 중앙
+        shapePaints[6].setColor(0xFF000080);    // 왼쪽 아래
+        shapePaints[7].setColor(0xFF8B00FF);    // 가운데 아래
+        shapePaints[8].setColor(Color.BLACK);   // 오른쪽 아래
     }
 
     @Override
@@ -51,51 +46,38 @@ public class GameView extends View {
         int paddingRight = getPaddingRight();
         int paddingTop = getPaddingTop();
         int paddingBottom = getPaddingBottom();
-
         int contentWidth = width - paddingLeft - paddingRight;
         int contentHeight = height - paddingTop - paddingBottom;
 
-        int size = Math.min(contentWidth, contentHeight);
-        int centerX = paddingLeft + contentWidth / 2;
-        int centerY = paddingTop + contentHeight / 2;
+        // 원의 지름 또는 사각형의 한 변의 길이 = 한 영역의 모서리 중 작은 길이 / 2
+        int areaWidth = contentWidth / 3;
+        int areaHeight = contentHeight / 3;
+        int shapeLength = Math.min(areaWidth, areaHeight) / 2;
 
+        // 배경 그리기
         drawBackground(canvas, paddingLeft, paddingTop, contentWidth, contentHeight);
-        drawSoccerBall(canvas, size, centerX, centerY);
-        drawLeftCircle(canvas, paddingLeft, paddingTop, contentWidth, contentHeight, size);
-        drawRightCircle(canvas, paddingTop, contentWidth, contentHeight, centerX, size);
-        drawCenterText(canvas, contentHeight, centerX, centerY);
+
+        // 도형 그리기
+        for (int i = 0; i < 9; ++i) {
+            int x = i % 3;
+            int y = i / 3;
+            float cx = paddingLeft + areaWidth / 2.0f + x * areaWidth;
+            float cy = paddingTop + areaHeight / 2.0f + y * areaHeight;
+
+            if (i % 2 == 0) {
+                canvas.drawCircle(cx, cy, shapeLength / 2.0f, shapePaints[i]);
+            } else {
+                canvas.drawRect(
+                        cx - shapeLength / 2.0f,
+                        cy + shapeLength / 2.0f,
+                        cx + shapeLength / 2.0f,
+                        cy - shapeLength / 2.0f,
+                        shapePaints[i]);
+            }
+        }
     }
 
     private void drawBackground(Canvas canvas, int paddingLeft, int paddingTop, int contentWidth, int contentHeight) {
-        canvas.drawRoundRect(paddingLeft, paddingTop, paddingLeft + contentWidth, paddingTop + contentHeight, 30, 30, paint);
-    }
-
-    private void drawSoccerBall(Canvas canvas, int size, int centerX, int centerY) {
-        int ballRadius = size / 10;
-        soccerDstRect.set(centerX - ballRadius, centerY - ballRadius,
-                         centerX + ballRadius, centerY + ballRadius);
-        canvas.drawBitmap(soccerBitmap, soccerSrcRect, soccerDstRect, paint);
-    }
-
-    private void drawLeftCircle(Canvas canvas, int paddingLeft, int paddingTop, int contentWidth, int contentHeight, int size) {
-        int leftCenterX = paddingLeft + contentWidth / 4;
-        int leftCenterY = paddingTop + contentHeight / 4;
-        int circleRadius = size / 16;
-        canvas.drawCircle(leftCenterX, leftCenterY, circleRadius, leftCirclePaint);
-    }
-
-    private void drawRightCircle(Canvas canvas, int paddingTop, int contentWidth, int contentHeight, int centerX, int size) {
-        int rightCenterX = centerX + contentWidth / 4;
-        int rightCenterY = paddingTop + contentHeight / 4;
-        int circleRadius = size / 16;
-        canvas.drawCircle(rightCenterX, rightCenterY, circleRadius, rightCirclePaint);
-    }
-
-    private void drawCenterText(Canvas canvas, int contentHeight, int centerX, int centerY) {
-        String text = "SOCCER";
-        textPaint.getTextBounds(text, 0, text.length(), textExtentRect);
-        int textX = centerX - textExtentRect.width() / 2;
-        int textY = centerY + contentHeight / 4;
-        canvas.drawText(text, textX, textY, textPaint);
+        canvas.drawRoundRect(paddingLeft, paddingTop, paddingLeft + contentWidth, paddingTop + contentHeight, 30, 30, bgrPaint);
     }
 }
