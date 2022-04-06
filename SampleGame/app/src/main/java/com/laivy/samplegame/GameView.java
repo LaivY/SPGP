@@ -1,9 +1,6 @@
 package com.laivy.samplegame;
 
 import android.content.Context;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -14,47 +11,42 @@ import android.view.View;
 
 import androidx.annotation.Nullable;
 
-import java.util.ArrayList;
-import java.util.Random;
-import java.util.function.Consumer;
-
 public class GameView extends View implements Choreographer.FrameCallback {
     private static final String TAG = GameView.class.getSimpleName();
-    private static final int BALL_COUNT = 10;
-    //private ArrayList<Ball> balls = new ArrayList<>();
-    private ArrayList<GameObject> objects = new ArrayList<>();
-    private Fighter fighter;
-
     private long previousTimeNanos = 0;
     private int framesPerSecond;
     private Paint fpsPaint = new Paint();
 
     public static GameView view;
+    private boolean initialized;
 
     public GameView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        initView();
+        //initView();
+    }
+
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+
+        Metrics.width = w;
+        Metrics.height = h;
+
+        if (!initialized) {
+            initView();
+            initialized = true;
+        }
     }
 
     private void initView() {
         view = this;
-
-        Random random = new Random();
-        for (int i = 0; i < BALL_COUNT; ++i) {
-            int dx = random.nextInt(10) + 5;
-            int dy = random.nextInt(10) + 5;
-            Ball ball = new Ball(dx, dy);
-            objects.add(ball);
-        }
-
-        fighter = new Fighter();
-        objects.add(fighter);
-
-        // 다음 프레임에 doFrame 함수가 호출되도록 설정
-        Choreographer.getInstance().postFrameCallback(this);
+        MainGame.getInstance().init();
 
         fpsPaint.setColor(Color.BLUE);
         fpsPaint.setTextSize(50);
+
+        // 다음 프레임에 doFrame 함수가 호출되도록 설정
+        Choreographer.getInstance().postFrameCallback(this);
     }
 
     @Override
@@ -63,40 +55,22 @@ public class GameView extends View implements Choreographer.FrameCallback {
         if (elapsed != 0) {
             framesPerSecond = 1_000_000_000 / elapsed;
             previousTimeNanos = currentTimeNanos;
-            update();
+            MainGame.getInstance().update(elapsed);
             invalidate();
         }
         Choreographer.getInstance().postFrameCallback(this);
     }
 
-    private void update() {
-        for (GameObject object : objects) {
-            object.update();
-        }
-        //fighter.update();
-    }
-
     @Override
     protected void onDraw(Canvas canvas) {
-        for (GameObject object : objects) {
-            object.draw(canvas);
-        }
-//        fighter.draw(canvas);
+        MainGame.getInstance().draw(canvas);
+        //fighter.draw(canvas);
         canvas.drawText("FPS : " + framesPerSecond, 100, 100, fpsPaint);
         //Log.d(TAG, "onDraw!");
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        int action = event.getAction();
-        switch (action) {
-            case MotionEvent.ACTION_DOWN:
-            case MotionEvent.ACTION_MOVE:
-                int x = (int) event.getX();
-                int y = (int) event.getY();
-                fighter.setPosition(x, y);
-                return true;
-        }
-        return super.onTouchEvent(event);
+        return MainGame.getInstance().onTouchEvent(event);
     }
 }
