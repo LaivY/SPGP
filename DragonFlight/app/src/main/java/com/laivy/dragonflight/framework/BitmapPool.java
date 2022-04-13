@@ -1,4 +1,4 @@
-package com.laivy.dragonflight;
+package com.laivy.dragonflight.framework;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;

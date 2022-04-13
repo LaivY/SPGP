@@ -1,8 +1,12 @@
-package com.laivy.dragonflight;
+package com.laivy.dragonflight.framework;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.RectF;
+
+import com.laivy.dragonflight.framework.BitmapPool;
+import com.laivy.dragonflight.framework.GameObject;
+import com.laivy.dragonflight.framework.Metrics;
 
 public class Sprite implements GameObject {
     protected Bitmap bitmap;
@@ -31,5 +35,9 @@ public class Sprite implements GameObject {
     @Override
     public void draw(Canvas canvas) {
         canvas.drawBitmap(bitmap, null, dstRect, null);
+    }
+
+    public void setDstRectWithRadius() {
+        dstRect.set(x - radius, y - radius, x + radius, y + radius);
     }
 }

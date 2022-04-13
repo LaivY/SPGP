@@ -1,8 +1,13 @@
-package com.laivy.dragonflight;
+package com.laivy.dragonflight.game;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.RectF;
+
+import com.laivy.dragonflight.framework.Metrics;
+import com.laivy.dragonflight.R;
+import com.laivy.dragonflight.framework.Sprite;
+import com.laivy.dragonflight.framework.BitmapPool;
 
 public class Fighter extends Sprite {
 

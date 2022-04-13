@@ -1,7 +1,9 @@
-package com.laivy.dragonflight;
+package com.laivy.dragonflight.framework;
 
 import android.content.res.Resources;
 import android.util.TypedValue;
+
+import com.laivy.dragonflight.framework.GameView;
 
 public class Metrics {
     public static int width;

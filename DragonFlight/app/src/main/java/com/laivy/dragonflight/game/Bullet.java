@@ -1,14 +1,23 @@
-package com.laivy.dragonflight;
+package com.laivy.dragonflight.game;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.RectF;
 
-public class Bullet implements GameObject {
+import com.laivy.dragonflight.framework.BoxCollidable;
+import com.laivy.dragonflight.framework.Metrics;
+import com.laivy.dragonflight.R;
+import com.laivy.dragonflight.framework.GameObject;
+
+public class Bullet implements GameObject, BoxCollidable {
+    protected static Paint paint;
+    protected static float laserWidth;
+
     protected float x, y;
     protected final float length;
     protected final float dy;
-    protected static Paint paint;
+    protected RectF boundingBox = new RectF();
 
     public Bullet(float x, float y) {
         this.x = x;
@@ -19,13 +28,17 @@ public class Bullet implements GameObject {
         if (paint == null) {
             paint = new Paint();
             paint.setColor(Color.RED);
-            paint.setStrokeWidth(Metrics.size(R.dimen.laser_width));
+            laserWidth = Metrics.size(R.dimen.laser_width);
+            paint.setStrokeWidth(laserWidth);
         }
     }
     @Override
     public void update() {
         float frameTime = MainGame.getInstance().frameTime;
         y += dy * frameTime;
+
+        float hw = laserWidth / 2.0f;
+        boundingBox.set(x - hw, y, x + hw, y + length);
 
         if (y < 0)
             MainGame.getInstance().remove(this);
@@ -34,5 +47,10 @@ public class Bullet implements GameObject {
     @Override
     public void draw(Canvas canvas) {
         canvas.drawLine(x, y, x, y - length, paint);
+    }
+
+    @Override
+    public RectF getBoundingBox() {
+        return boundingBox;
     }
 }
