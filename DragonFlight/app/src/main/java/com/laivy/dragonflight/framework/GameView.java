@@ -75,7 +75,6 @@ public class GameView extends View implements Choreographer.FrameCallback {
         Choreographer.getInstance().postFrameCallback(this);
     }
 
-
     @Override
     protected void onDraw(Canvas canvas) {
         MainGame.getInstance().draw(canvas);

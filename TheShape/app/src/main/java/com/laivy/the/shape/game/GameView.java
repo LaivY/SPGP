@@ -1,14 +1,16 @@
-package com.laivy.the.shape.framework;
+package com.laivy.the.shape.game;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.view.Choreographer;
+import android.view.MotionEvent;
 import android.view.View;
 
 import androidx.annotation.Nullable;
 
-import com.laivy.the.shape.game.GameScene;
+import com.laivy.the.shape.framework.Metrics;
 
 public class GameView extends View implements Choreographer.FrameCallback {
     public static GameView view;
@@ -40,10 +42,23 @@ public class GameView extends View implements Choreographer.FrameCallback {
     }
 
     @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        return GameScene.getInstance().onTouchEvent(event);
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        GameScene.getInstance().draw(canvas);
+    }
+
+    @Override
     public void doFrame(long currentTimeNanos) {
         if (!isRunning)
             return;
-        deltaTime = (currentTimeNanos - prevTimeNanos) / 1e-9f;
+        if (prevTimeNanos == 0)
+            prevTimeNanos = currentTimeNanos;
+
+        deltaTime = (currentTimeNanos - prevTimeNanos) / 1e+9f;
         if (deltaTime != 0.0f) {
             prevTimeNanos = currentTimeNanos;
             GameScene.getInstance().update(deltaTime);
@@ -52,12 +67,9 @@ public class GameView extends View implements Choreographer.FrameCallback {
         Choreographer.getInstance().postFrameCallback(this);
     }
 
-    @Override
-    protected void onDraw(Canvas canvas) {
-        GameScene.getInstance().draw(canvas);
-    }
-
     private void init() {
-
+        view = this;
+        GameScene.getInstance().init();
+        Choreographer.getInstance().postFrameCallback(this);
     }
 }

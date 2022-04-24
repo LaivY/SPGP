@@ -4,6 +4,8 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import com.laivy.the.shape.game.GameView;
+
 import java.util.HashMap;
 
 public class BitmapPool {
