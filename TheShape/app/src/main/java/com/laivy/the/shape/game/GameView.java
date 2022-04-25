@@ -1,6 +1,5 @@
 package com.laivy.the.shape.game;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;

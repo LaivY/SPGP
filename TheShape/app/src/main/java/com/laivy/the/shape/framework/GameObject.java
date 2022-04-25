@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.PointF;
 import android.graphics.RectF;
+import android.view.MotionEvent;
 
 public class GameObject {
     protected Bitmap bitmap;
@@ -20,13 +21,18 @@ public class GameObject {
         position = new PointF();
     }
 
+    public boolean onTouchEvent(MotionEvent event) {
+        return false;
+    }
+
     public void update(float deltaTime) {
         dstRect.set(-bitmapWidth / 2.0f, -bitmapHeight / 2.0f, bitmapWidth / 2.0f, bitmapHeight / 2.0f);
         dstRect.offset(position.x, position.y);
     }
 
     public void draw(Canvas canvas) {
-        canvas.drawBitmap(bitmap, null, dstRect, null);
+        if (bitmap != null)
+            canvas.drawBitmap(bitmap, null, dstRect, null);
     }
 
     public void setBitmap(int bitmapResourceId) {

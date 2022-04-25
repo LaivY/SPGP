@@ -26,7 +26,10 @@ public class GameScene {
     }
 
     public boolean onTouchEvent(MotionEvent event) {
-        return player.onTouchEvent(event);
+        boolean result = false;
+        for (GameObject o : gameObjects)
+            result |= o.onTouchEvent(event);
+        return result;
     }
 
     public void update(float deltaTime) {
@@ -46,6 +49,11 @@ public class GameScene {
         player.setBitmap(R.mipmap.player);
         player.setPosition(50.0f, 50.0f);
         gameObjects.add(player);
+
+        Controller controller = new Controller();
+        controller.setPlayer(player);
+        controller.setBitmap(R.mipmap.player);
+        gameObjects.add(controller);
     }
 
     public void add(GameObject gameObject) {

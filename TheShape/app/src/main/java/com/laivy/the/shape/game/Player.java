@@ -1,9 +1,7 @@
 package com.laivy.the.shape.game;
 
 import android.graphics.Canvas;
-import android.graphics.Matrix;
 import android.graphics.PointF;
-import android.util.Log;
 import android.view.MotionEvent;
 
 import com.laivy.the.shape.R;
@@ -35,14 +33,6 @@ public class Player extends GameObject {
         if (remainRotateDegree > 0.0f) {
             remainRotateDegree -= MAX_ROTATE_DEGREE * deltaTime;
             currRotateDegree += MAX_ROTATE_DEGREE * deltaTime;
-
-            // 임시. 회전
-            Matrix matrix = new Matrix();
-            matrix.postRotate(MAX_ROTATE_DEGREE * deltaTime);
-            float[] dir = { direction.x, direction.y };
-            matrix.mapPoints(dir);
-            direction.x = dir[0];
-            direction.y = dir[1];
         }
 
         // 이동
@@ -60,19 +50,10 @@ public class Player extends GameObject {
         canvas.restore();
     }
 
-    public boolean onTouchEvent(MotionEvent event) {
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-            case MotionEvent.ACTION_MOVE:
-                float tx = event.getX();
-                float ty = event.getY();
-
-                float dx = tx - position.x;
-                float dy = ty - position.y;
-                float l = (float) Math.sqrt(dx * dx + dy * dy);
-                direction.set(dx / l, dy / l);
-                return true;
-        }
-        return false;
+    public void setDirection(float x, float y) {
+        float length = (float) Math.sqrt(x * x + y * y);
+        x /= length;
+        y /= length;
+        direction.set(x, y);
     }
 }
