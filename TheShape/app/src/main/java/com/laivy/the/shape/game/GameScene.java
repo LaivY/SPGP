@@ -50,9 +50,12 @@ public class GameScene {
         player.setPosition(50.0f, 50.0f);
         gameObjects.add(player);
 
+        GameObject stick = new GameObject();
+        stick.setBitmap(R.mipmap.player);
         Controller controller = new Controller();
         controller.setPlayer(player);
         controller.setBitmap(R.mipmap.player);
+        controller.setStick(stick);
         gameObjects.add(controller);
     }
 
