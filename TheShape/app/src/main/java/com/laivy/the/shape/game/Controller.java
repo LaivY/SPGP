@@ -25,11 +25,11 @@ public class Controller extends GameObject {
         switch (event.getAction()) {
             case MotionEvent.ACTION_UP:
                 isActive = false;
+                player.setDirection(0.0f, 0.0f);
                 return true;
             case MotionEvent.ACTION_DOWN:
                 isActive = true;
                 setPosition(event.getX(), event.getY());
-                
                 currPosition.set(event.getX(), event.getY());
                 return true;
             case MotionEvent.ACTION_MOVE:

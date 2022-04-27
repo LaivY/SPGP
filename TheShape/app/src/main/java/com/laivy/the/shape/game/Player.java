@@ -24,7 +24,7 @@ public class Player extends GameObject {
         exp = 0;
         dmg = R.dimen.PLAYER_DMG;
         speed = Metrics.getFloat(R.dimen.PLAYER_SPEED);
-        direction = new PointF(0.0f, -1.0f);
+        direction = new PointF();
     }
 
     @Override
@@ -51,6 +51,11 @@ public class Player extends GameObject {
     }
 
     public void setDirection(float x, float y) {
+        if (x == 0.0f && y == 0.0f) {
+            direction.set(0.0f, 0.0f);
+            return;
+        }
+
         float length = (float) Math.sqrt(x * x + y * y);
         x /= length;
         y /= length;

@@ -44,4 +44,8 @@ public class GameObject {
     public void setPosition(float x, float y) {
         position.set(x, y);
     }
+
+    public PointF getPosition() {
+        return position;
+    }
 }
