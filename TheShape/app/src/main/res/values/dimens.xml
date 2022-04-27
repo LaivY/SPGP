@@ -3,4 +3,5 @@
     <dimen name="PLAYER_HP">100</dimen>
     <dimen name="PLAYER_DMG">5</dimen>
     <dimen name="PLAYER_SPEED">300</dimen>
+    <item name="PLAYER_FIRE_SPEED" type="dimen" format="float">0.3</item>
 </resources>
