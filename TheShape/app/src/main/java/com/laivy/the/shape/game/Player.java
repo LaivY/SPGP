@@ -79,8 +79,6 @@ public class Player extends GameObject {
             matrix.mapPoints(pos);
             direction.x = pos[0];
             direction.y = pos[1];
-
-            Log.d("DEBUG", currRotateDegree + "");
         }
 
         // 이동, dstRect 최신화

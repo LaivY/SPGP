@@ -70,9 +70,10 @@ public class GameScene {
         camera = new Camera();
         camera.setPlayer(player);
 
-        // 카메라 작동 테스를 위한 오브젝트 배치
-        GameObject test = new GameObject();
+        // 테스트용 적
+        Enemy test = new Enemy();
         test.setBitmap(R.mipmap.player);
+        test.setPlayer(player);
         gameObjects.add(test);
 
         GameObject stick = new GameObject();
