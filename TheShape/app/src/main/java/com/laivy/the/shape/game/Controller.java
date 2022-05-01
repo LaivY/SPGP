@@ -2,12 +2,13 @@ package com.laivy.the.shape.game;
 
 import android.graphics.Canvas;
 import android.graphics.PointF;
+import android.util.Log;
 import android.view.MotionEvent;
 
 import com.laivy.the.shape.framework.GameObject;
 
 public class Controller extends GameObject {
-    private final float CONTROLLER_STICK_RADIUS = 100.0f;
+    private final float CONTROLLER_STICK_RADIUS = 80.0f;
     private boolean isActive;
     private Player player;
     private PointF currPosition;
@@ -51,9 +52,8 @@ public class Controller extends GameObject {
                 if (player != null) {
                     float dx = currPosition.x - position.x;
                     float dy = currPosition.y - position.y;
-
-                    if (dx != 0.0f || dy != 0.0f)
-                        player.setDirection(dx, dy);
+                    float t = (float) Math.toDegrees(Math.atan2(dx, dy));
+                    player.setTargetRotateDegree(Math.abs(t - 180.0f));
                 }
                 return true;
         }

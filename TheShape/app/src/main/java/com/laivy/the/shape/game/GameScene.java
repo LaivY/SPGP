@@ -76,10 +76,10 @@ public class GameScene {
         gameObjects.add(test);
 
         GameObject stick = new GameObject();
-        stick.setBitmap(R.mipmap.player);
+        stick.setBitmap(R.mipmap.controller);
         Controller controller = new Controller();
         controller.setPlayer(player);
-        controller.setBitmap(R.mipmap.player);
+        controller.setBitmap(R.mipmap.controller_base);
         controller.setStick(stick);
         uiObjects.add(controller);
     }
