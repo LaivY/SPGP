@@ -63,18 +63,22 @@ public class GameScene {
     }
 
     public void init() {
+        // 레이어 초기화
         layers = new HashMap<>();
         for (eLayer layer : eLayer.values())
             layers.put(layer, new ArrayList<>());
 
+        // 플레이어
         player = new Player();
         player.setBitmap(R.mipmap.player);
         player.setPosition(50.0f, 50.0f);
         layers.get(eLayer.PLAYER).add(player);
 
+        // 카메라
         camera = new Camera();
         camera.setPlayer(player);
 
+        // 컨트롤러
         GameObject stick = new GameObject();
         stick.setBitmap(R.mipmap.controller);
         Controller controller = new Controller();
@@ -83,11 +87,15 @@ public class GameScene {
         controller.setStick(stick);
         layers.get(eLayer.UI).add(controller);
 
-        // 테스트용 적
+        // 적
         Enemy enemy = new Enemy();
         enemy.setBitmap(R.mipmap.circle);
         enemy.setPlayer(player);
         layers.get(eLayer.ENEMY).add(enemy);
+
+        // 충돌체크
+        CollisionChecker checker = new CollisionChecker();
+        layers.get(eLayer.SYSTEM).add(checker);
     }
 
     public void add(eLayer layer, GameObject gameObject) {
@@ -106,5 +114,9 @@ public class GameScene {
                 layers.get(layer).add(gameObject);
             }
         });
+    }
+
+    public ArrayList<GameObject> getLayer(eLayer layer) {
+        return layers.get(layer);
     }
 }

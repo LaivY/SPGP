@@ -71,4 +71,8 @@ public class GameObject {
     public PointF getPosition() {
         return position;
     }
+
+    public RectF getHitBox() {
+        return hitBox;
+    }
 }
