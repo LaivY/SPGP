@@ -22,7 +22,6 @@ public class Player extends GameObject {
     private float currRotateDegree;
     private float speed;
     private PointF direction;
-    private Matrix matrix;
 
     public Player() {
         isMove = false;
@@ -35,7 +34,6 @@ public class Player extends GameObject {
         currRotateDegree = 0.0f;
         speed = Metrics.getFloat(R.dimen.PLAYER_SPEED);
         direction = new PointF(0.0f, 0.0f);
-        matrix = new Matrix();
     }
 
     @Override

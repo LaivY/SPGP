@@ -3,6 +3,7 @@ package com.laivy.the.shape.framework;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.RectF;
@@ -10,6 +11,8 @@ import android.view.MotionEvent;
 
 public class GameObject {
     static protected Paint paint;
+    static protected Matrix matrix;
+    protected boolean isValid;
     protected Bitmap bitmap;
     protected float bitmapWidth;
     protected float bitmapHeight;
@@ -23,7 +26,10 @@ public class GameObject {
             paint.setColor(Color.RED);
             paint.setStyle(Paint.Style.STROKE);
         }
-
+        if (matrix == null) {
+            matrix = new Matrix();
+        }
+        isValid = true;
         bitmap = null;
         bitmapWidth = 0.0f;
         bitmapHeight = 0.0f;
@@ -37,13 +43,18 @@ public class GameObject {
     }
 
     public void update(float deltaTime) {
+        if (!isValid) return;
         dstRect.set(-bitmapWidth / 2.0f, -bitmapHeight / 2.0f, bitmapWidth / 2.0f, bitmapHeight / 2.0f);
         dstRect.offset(position.x, position.y);
     }
 
     public void draw(Canvas canvas) {
-        if (bitmap != null)
-            canvas.drawBitmap(bitmap, null, dstRect, null);
+        if (!isValid || bitmap == null) return;
+        canvas.drawBitmap(bitmap, null, dstRect, null);
+    }
+
+    public void setIsValid(boolean isValid) {
+        this.isValid = isValid;
     }
 
     public void setBitmap(int bitmapResourceId) {

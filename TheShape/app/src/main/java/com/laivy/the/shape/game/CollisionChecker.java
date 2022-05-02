@@ -1,6 +1,7 @@
 package com.laivy.the.shape.game;
 
 import android.graphics.RectF;
+import android.util.Log;
 
 import com.laivy.the.shape.framework.GameObject;
 
@@ -19,7 +20,6 @@ public class CollisionChecker extends GameObject {
             for (GameObject o2 : bullets) {
                 Bullet bullet = (Bullet) o2;
                 if (isCollided(enemy.getHitBox(), bullet.getHitBox())) {
-                    //GameScene.getInstance().remove(GameScene.eLayer.ENEMY, enemy);
                     GameScene.getInstance().remove(GameScene.eLayer.BULLET, bullet);
                     break;
                 }
@@ -28,10 +28,6 @@ public class CollisionChecker extends GameObject {
     }
 
     public static boolean isCollided(RectF hitBox1, RectF hitBox2) {
-        if (hitBox1.left > hitBox2.right) return false;
-        if (hitBox1.top > hitBox2.bottom) return false;
-        if (hitBox1.right > hitBox2.left) return false;
-        if (hitBox1.bottom > hitBox2.top) return false;
-        return true;
+        return RectF.intersects(hitBox1, hitBox2);
     }
 }

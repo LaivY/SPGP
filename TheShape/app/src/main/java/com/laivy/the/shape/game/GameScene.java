@@ -99,21 +99,12 @@ public class GameScene {
     }
 
     public void add(eLayer layer, GameObject gameObject) {
-        GameView.view.post(new Runnable() {
-            @Override
-            public void run() {
-                layers.get(layer).add(gameObject);
-            }
-        });
+        GameView.view.post(() -> layers.get(layer).add(gameObject));
     }
 
     public void remove(eLayer layer, GameObject gameObject) {
-        GameView.view.post(new Runnable() {
-            @Override
-            public void run() {
-                layers.get(layer).add(gameObject);
-            }
-        });
+        gameObject.setIsValid(false);
+        GameView.view.post(() -> layers.get(layer).add(gameObject));
     }
 
     public ArrayList<GameObject> getLayer(eLayer layer) {

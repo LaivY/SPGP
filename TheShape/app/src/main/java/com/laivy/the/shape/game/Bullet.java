@@ -15,13 +15,15 @@ public class Bullet extends GameObject {
     public Bullet() {
         dmg = 1;
         angle = 0.0f;
-        speed = 2000.0f;
+        speed = 1500.0f;
         direction = new PointF();
         hitBox = new RectF(-5.0f, -5.0f, 5.0f, 5.0f);
     }
 
     @Override
     public void update(float deltaTime) {
+        if (!isValid) return;
+
         position.offset(
             direction.x * speed * deltaTime,
             direction.y * speed * deltaTime
@@ -35,6 +37,7 @@ public class Bullet extends GameObject {
 
     @Override
     public void draw(Canvas canvas) {
+        if (!isValid) return;
         canvas.drawRect(hitBox, paint);
         canvas.save();
         canvas.rotate(angle, position.x, position.y);

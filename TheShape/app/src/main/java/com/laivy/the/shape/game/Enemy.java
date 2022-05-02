@@ -25,8 +25,15 @@ public class Enemy extends GameObject {
 
     @Override
     public void update(float deltaTime) {
-        if (player == null) return;
+        if (!isValid || player == null) return;
 
+        // 체력이 0이하라면 삭제
+        if (hp <= 0) {
+            GameScene.getInstance().remove(GameScene.eLayer.ENEMY, this);
+            return;
+        }
+
+        // 플레이어를 쫓아다니도록 설정
         PointF playerPosition = player.getPosition();
         float dx = playerPosition.x - position.x;
         float dy = playerPosition.y - position.y;
@@ -36,18 +43,25 @@ public class Enemy extends GameObject {
         position.offset(dx * speed, dy * speed);
         hitBox.offset(dx * speed, dy * speed);
 
+        // 위에서 구한 방향벡터를 이용하여 회전한 각도 계산
         rotate = (float) Math.toDegrees(Math.atan2(dx, dy));
         rotate = Math.abs(rotate - 180.0f);
+
         super.update(deltaTime);
     }
 
     @Override
     public void draw(Canvas canvas) {
+        if (!isValid || bitmap == null) return;
         canvas.drawRect(hitBox, paint);
         canvas.save();
         canvas.rotate(rotate, position.x, position.y);
         super.draw(canvas);
         canvas.restore();
+    }
+
+    public void addHp(int hp) {
+        this.hp += hp;
     }
 
     public void setPlayer(Player player) {
