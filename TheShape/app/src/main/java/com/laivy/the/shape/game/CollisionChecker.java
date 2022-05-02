@@ -15,13 +15,16 @@ public class CollisionChecker extends GameObject {
         ArrayList<GameObject> enemies = GameScene.getInstance().getLayer(GameScene.eLayer.ENEMY);
 
         for (GameObject o1 : enemies) {
+            if (!o1.getIsValid()) continue;
             Enemy enemy = (Enemy) o1;
 
             for (GameObject o2 : bullets) {
+                if (!o2.getIsValid()) continue;
+
                 Bullet bullet = (Bullet) o2;
                 if (isCollided(enemy.getHitBox(), bullet.getHitBox())) {
                     GameScene.getInstance().remove(GameScene.eLayer.BULLET, bullet);
-                    break;
+                    enemy.onHit(bullet);
                 }
             }
         }

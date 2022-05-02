@@ -2,6 +2,7 @@ package com.laivy.the.shape.game;
 
 import android.graphics.Canvas;
 import android.graphics.PointF;
+import android.graphics.Rect;
 import android.graphics.RectF;
 
 import com.laivy.the.shape.framework.GameObject;
@@ -15,9 +16,9 @@ public class Bullet extends GameObject {
     public Bullet() {
         dmg = 1;
         angle = 0.0f;
-        speed = 1500.0f;
+        speed = 2000.0f;
         direction = new PointF();
-        hitBox = new RectF(-5.0f, -5.0f, 5.0f, 5.0f);
+        hitBox = new RectF(-5.0f, -50.0f, 5.0f, 50.0f);
     }
 
     @Override
@@ -51,5 +52,17 @@ public class Bullet extends GameObject {
         if (y > 0) {
             angle += 180.0f;
         }
+
+        matrix.reset();
+        matrix.postRotate(angle, hitBox.centerX(), hitBox.centerY());
+        matrix.mapRect(hitBox);
+    }
+
+    int getDmg() {
+        return dmg;
+    }
+
+    PointF getDirection() {
+        return direction;
     }
 }

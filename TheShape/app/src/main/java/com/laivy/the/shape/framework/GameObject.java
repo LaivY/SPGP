@@ -79,6 +79,10 @@ public class GameObject {
         }
     }
 
+    public boolean getIsValid() {
+        return isValid;
+    }
+
     public PointF getPosition() {
         return position;
     }
