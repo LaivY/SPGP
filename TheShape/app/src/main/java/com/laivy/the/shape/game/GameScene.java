@@ -72,9 +72,15 @@ public class GameScene {
 
         // 테스트용 적
         Enemy test = new Enemy();
-        test.setBitmap(R.mipmap.player);
+        test.setBitmap(R.mipmap.circle);
         test.setPlayer(player);
         gameObjects.add(test);
+
+        Enemy test2 = new Enemy();
+        test2.setBitmap(R.mipmap.circle);
+        test2.setPlayer(player);
+        test2.setPosition(500.0f, 50.0f);
+        gameObjects.add(test2);
 
         GameObject stick = new GameObject();
         stick.setBitmap(R.mipmap.controller);

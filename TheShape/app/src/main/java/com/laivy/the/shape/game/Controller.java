@@ -31,6 +31,7 @@ public class Controller extends GameObject {
                 isActive = true;
                 setPosition(event.getX(), event.getY());
                 currPosition.set(event.getX(), event.getY());
+                stick.setPosition(event.getX(), event.getY());
                 return true;
             case MotionEvent.ACTION_MOVE:
                 if (!isActive) return true;
