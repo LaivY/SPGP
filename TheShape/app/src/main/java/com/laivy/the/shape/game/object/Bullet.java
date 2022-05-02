@@ -47,7 +47,7 @@ public class Bullet extends GameObject {
     @Override
     public void draw(Canvas canvas) {
         if (!isValid) return;
-        canvas.drawRect(hitBox, paint);
+        //canvas.drawRect(hitBox, paint);
         canvas.save();
         canvas.rotate(degree, position.x, position.y);
         super.draw(canvas);

@@ -73,7 +73,7 @@ public class Enemy extends GameObject {
     @Override
     public void draw(Canvas canvas) {
         if (!isValid || bitmap == null) return;
-        canvas.drawRect(hitBox, paint);
+        //canvas.drawRect(hitBox, paint);
         canvas.save();
         canvas.rotate(rotate, position.x, position.y);
         super.draw(canvas);

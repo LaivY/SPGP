@@ -37,7 +37,7 @@ public class ExpBar extends GameObject {
         int exp = player.getExp();
 
         if (this.exp != exp) {
-            remain = width * (exp - this.exp) / (1 + player.getLevel());
+            remain += width * (exp - this.exp) / (4 + player.getLevel());
             this.exp = exp;
         }
         if (remain > 0.0f) {
@@ -56,7 +56,7 @@ public class ExpBar extends GameObject {
         barPaint.setColor(Color.GRAY);
         canvas.drawRect(base, barPaint);
 
-        barPaint.setColor(Color.BLUE);
+        barPaint.setColor(0xFF00b7ee);
         canvas.drawRect(bar, barPaint);
     }
 

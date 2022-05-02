@@ -25,7 +25,7 @@ public class Exp extends GameObject {
         direction.x = direction.x / length;
         direction.y = direction.y / length;
 
-        hitBox = new RectF(-50.0f, -50.0f, 50.0f, 50.0f);
+        hitBox = new RectF(-15.0f, -15.0f, 15.0f, 15.0f);
     }
 
     @Override
@@ -43,7 +43,7 @@ public class Exp extends GameObject {
     @Override
     public void draw(Canvas canvas) {
         if (!isValid) return;
-        canvas.drawRect(hitBox, paint);
+        //canvas.drawRect(hitBox, paint);
         super.draw(canvas);
     }
 }

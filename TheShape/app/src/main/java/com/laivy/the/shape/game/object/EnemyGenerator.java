@@ -14,8 +14,8 @@ public class EnemyGenerator extends GameObject {
 
     public EnemyGenerator() {
         player = null;
-        spawnTime = 5.0f;
-        timer = 0.0f;
+        spawnTime = 3.0f;
+        timer = 3.0f;
     }
 
     @Override

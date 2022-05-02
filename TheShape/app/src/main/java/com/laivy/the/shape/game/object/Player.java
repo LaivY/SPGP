@@ -96,7 +96,7 @@ public class Player extends GameObject {
 
     @Override
     public void draw(Canvas canvas) {
-        canvas.drawRect(hitBox, paint);
+        //canvas.drawRect(hitBox, paint);
         canvas.save();
         canvas.rotate(currRotateDegree, position.x, position.y);
         canvas.drawBitmap(bitmap, null, dstRect, null);
