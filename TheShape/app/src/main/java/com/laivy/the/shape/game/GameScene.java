@@ -96,6 +96,11 @@ public class GameScene {
         // 충돌체크
         CollisionChecker checker = new CollisionChecker();
         layers.get(eLayer.SYSTEM).add(checker);
+
+        // 적 생성
+        EnemyGenerator enemyGenerator = new EnemyGenerator();
+        enemyGenerator.setPlayer(player);
+        layers.get(eLayer.SYSTEM).add(enemyGenerator);
     }
 
     public void add(eLayer layer, GameObject gameObject) {

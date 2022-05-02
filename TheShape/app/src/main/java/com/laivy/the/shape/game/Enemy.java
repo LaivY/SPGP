@@ -20,7 +20,7 @@ public class Enemy extends GameObject {
 
     public Enemy() {
         hp = 10;
-        speed = 100.0f;
+        speed = 80.0f;
         rotate = 0.0f;
         knockBackTimer = 0.0f;
         knockBackPower = 0.0f;
@@ -81,7 +81,7 @@ public class Enemy extends GameObject {
     }
 
     public void onHit(Bullet bullet) {
-        //hp -= bullet.getDmg();
+        hp -= bullet.getDmg();
         knockBackTimer = 0.5f;
         knockBackPower = 100.0f;
         knockBackDirection = bullet.getDirection();
