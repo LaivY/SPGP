@@ -1,12 +1,16 @@
 package com.laivy.the.shape.game;
 
 import android.graphics.Canvas;
-import android.graphics.PointF;
 import android.view.MotionEvent;
 
 import com.laivy.the.shape.R;
 import com.laivy.the.shape.framework.GameObject;
-import com.laivy.the.shape.framework.Metrics;
+import com.laivy.the.shape.game.object.CollisionChecker;
+import com.laivy.the.shape.game.object.Controller;
+import com.laivy.the.shape.game.object.Enemy;
+import com.laivy.the.shape.game.object.EnemyGenerator;
+import com.laivy.the.shape.game.object.ExpBar;
+import com.laivy.the.shape.game.object.Player;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,7 +18,7 @@ import java.util.Map;
 
 public class GameScene {
     public enum eLayer {
-        BULLET, ENEMY, PLAYER, UI, SYSTEM
+        BULLET, EXP, ENEMY, PLAYER, UI, SYSTEM
     }
     private static GameScene instance;
     private Map<eLayer, ArrayList<GameObject>> layers;
@@ -87,17 +91,16 @@ public class GameScene {
         controller.setStick(stick);
         layers.get(eLayer.UI).add(controller);
 
-        // 적
-        Enemy enemy = new Enemy();
-        enemy.setBitmap(R.mipmap.circle);
-        enemy.setPlayer(player);
-        layers.get(eLayer.ENEMY).add(enemy);
+        // 경험치바
+        ExpBar expBar = new ExpBar();
+        expBar.setPlayer(player);
+        layers.get(eLayer.UI).add(expBar);
 
-        // 충돌체크
+        // 충돌체커
         CollisionChecker checker = new CollisionChecker();
         layers.get(eLayer.SYSTEM).add(checker);
 
-        // 적 생성
+        // 적 생성기
         EnemyGenerator enemyGenerator = new EnemyGenerator();
         enemyGenerator.setPlayer(player);
         layers.get(eLayer.SYSTEM).add(enemyGenerator);
@@ -114,5 +117,9 @@ public class GameScene {
 
     public ArrayList<GameObject> getLayer(eLayer layer) {
         return layers.get(layer);
+    }
+
+    public Player getPlayer() {
+        return player;
     }
 }

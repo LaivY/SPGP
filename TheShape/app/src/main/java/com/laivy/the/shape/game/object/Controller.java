@@ -1,8 +1,7 @@
-package com.laivy.the.shape.game;
+package com.laivy.the.shape.game.object;
 
 import android.graphics.Canvas;
 import android.graphics.PointF;
-import android.util.Log;
 import android.view.MotionEvent;
 
 import com.laivy.the.shape.framework.GameObject;
@@ -14,7 +13,7 @@ public class Controller extends GameObject {
     private PointF currPosition;
     private GameObject stick;
 
-    Controller() {
+    public Controller() {
         isActive = false;
         player = null;
         currPosition = new PointF();

@@ -3,5 +3,6 @@
     <dimen name="PLAYER_HP">100</dimen>
     <dimen name="PLAYER_DMG">5</dimen>
     <dimen name="PLAYER_SPEED">300</dimen>
+    <dimen name="EXPBAR_WIDTH">1000</dimen>
     <item name="PLAYER_FIRE_SPEED" type="dimen" format="float">0.2</item>
 </resources>

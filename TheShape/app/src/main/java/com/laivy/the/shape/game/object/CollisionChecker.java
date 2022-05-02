@@ -1,9 +1,9 @@
-package com.laivy.the.shape.game;
+package com.laivy.the.shape.game.object;
 
 import android.graphics.RectF;
-import android.util.Log;
 
 import com.laivy.the.shape.framework.GameObject;
+import com.laivy.the.shape.game.GameScene;
 
 import java.util.ArrayList;
 
@@ -11,6 +11,11 @@ public class CollisionChecker extends GameObject {
 
     @Override
     public void update(float deltaTime) {
+        checkEnemyAndBullet();
+        checkPlayerAndExp();
+    }
+
+    public void checkEnemyAndBullet() {
         ArrayList<GameObject> bullets = GameScene.getInstance().getLayer(GameScene.eLayer.BULLET);
         ArrayList<GameObject> enemies = GameScene.getInstance().getLayer(GameScene.eLayer.ENEMY);
 
@@ -26,6 +31,20 @@ public class CollisionChecker extends GameObject {
                     GameScene.getInstance().remove(GameScene.eLayer.BULLET, bullet);
                     enemy.onHit(bullet);
                 }
+            }
+        }
+    }
+
+    public void checkPlayerAndExp() {
+        Player player = GameScene.getInstance().getPlayer();
+        ArrayList<GameObject> exps = GameScene.getInstance().getLayer(GameScene.eLayer.EXP);
+
+        for (GameObject o : exps) {
+            if (!o.getIsValid()) continue;
+            Exp exp = (Exp) o;
+            if (isCollided(player.getHitBox(), exp.getHitBox())) {
+                GameScene.getInstance().remove(GameScene.eLayer.EXP, exp);
+                player.addExp(1);
             }
         }
     }

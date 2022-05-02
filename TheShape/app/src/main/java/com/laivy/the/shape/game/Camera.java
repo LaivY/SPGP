@@ -4,6 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.PointF;
 
 import com.laivy.the.shape.framework.Metrics;
+import com.laivy.the.shape.game.object.Player;
 
 public class Camera {
     private final float DELAY = 0.3f;

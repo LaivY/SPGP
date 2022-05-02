@@ -1,13 +1,12 @@
-package com.laivy.the.shape.game;
+package com.laivy.the.shape.game.object;
 
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.RectF;
-import android.util.Log;
 
+import com.laivy.the.shape.R;
 import com.laivy.the.shape.framework.GameObject;
+import com.laivy.the.shape.game.GameScene;
 
 public class Enemy extends GameObject {
     private int hp;
@@ -35,6 +34,7 @@ public class Enemy extends GameObject {
 
         // 체력이 0이하라면 삭제
         if (hp <= 0) {
+            onDestroy();
             GameScene.getInstance().remove(GameScene.eLayer.ENEMY, this);
             return;
         }
@@ -85,6 +85,13 @@ public class Enemy extends GameObject {
         knockBackTimer = 0.5f;
         knockBackPower = 100.0f;
         knockBackDirection = bullet.getDirection();
+    }
+
+    public void onDestroy() {
+        Exp exp = new Exp();
+        exp.setBitmap(R.mipmap.exp);
+        exp.setPosition(position.x, position.y);
+        GameScene.getInstance().add(GameScene.eLayer.EXP, exp);
     }
 
     public void addHp(int hp) {

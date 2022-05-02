@@ -1,20 +1,21 @@
-package com.laivy.the.shape.game;
+package com.laivy.the.shape.game.object;
 
 import android.graphics.Canvas;
-import android.graphics.Matrix;
 import android.graphics.PointF;
-import android.util.Log;
+import android.graphics.RectF;
 import android.view.MotionEvent;
 
 import com.laivy.the.shape.R;
 import com.laivy.the.shape.framework.GameObject;
 import com.laivy.the.shape.framework.Metrics;
+import com.laivy.the.shape.game.GameScene;
 
 public class Player extends GameObject {
     private final float MAX_ROTATE_DEGREE = 180.0f;
     private boolean isMove;
     private int hp;
     private int exp;
+    private int level;
     private int dmg;
     private float fireSpeed;
     private float fireTimer;
@@ -27,6 +28,7 @@ public class Player extends GameObject {
         isMove = false;
         hp = R.dimen.PLAYER_HP;
         exp = 0;
+        level = 1;
         dmg = R.dimen.PLAYER_DMG;
         fireSpeed = Metrics.getFloat(R.dimen.PLAYER_FIRE_SPEED);
         fireTimer = 0.0f;
@@ -34,6 +36,7 @@ public class Player extends GameObject {
         currRotateDegree = 0.0f;
         speed = Metrics.getFloat(R.dimen.PLAYER_SPEED);
         direction = new PointF(0.0f, 0.0f);
+        hitBox = new RectF(-20.0f, -20.0f, 20.0f, 20.0f);
     }
 
     @Override
@@ -82,6 +85,7 @@ public class Player extends GameObject {
         // 이동, dstRect 최신화
         if (isMove) {
             position.offset(direction.x * speed * deltaTime, direction.y * speed * deltaTime);
+            hitBox.offset(direction.x * speed * deltaTime, direction.y * speed * deltaTime);
             super.update(deltaTime);
         }
 
@@ -92,6 +96,7 @@ public class Player extends GameObject {
 
     @Override
     public void draw(Canvas canvas) {
+        canvas.drawRect(hitBox, paint);
         canvas.save();
         canvas.rotate(currRotateDegree, position.x, position.y);
         canvas.drawBitmap(bitmap, null, dstRect, null);
@@ -136,5 +141,17 @@ public class Player extends GameObject {
         x /= length;
         y /= length;
         direction.set(x, y);
+    }
+
+    public int getExp() {
+        return exp;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void addExp(int exp) {
+        this.exp += exp;
     }
 }
