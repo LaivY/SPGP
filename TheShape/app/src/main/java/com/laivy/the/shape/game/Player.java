@@ -108,7 +108,7 @@ public class Player extends GameObject {
         bullet.setBitmap(R.mipmap.bullet);
         bullet.setPosition(position.x, position.y);
         bullet.setDirection(direction.x, direction.y);
-        GameScene.getInstance().add(bullet);
+        GameScene.getInstance().add(GameScene.eLayer.BULLET, bullet);
 
         fireTimer = 0.0f;
     }

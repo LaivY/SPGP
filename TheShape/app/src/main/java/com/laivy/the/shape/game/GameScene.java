@@ -9,18 +9,20 @@ import com.laivy.the.shape.framework.GameObject;
 import com.laivy.the.shape.framework.Metrics;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class GameScene {
+    public enum eLayer {
+        BULLET, ENEMY, PLAYER, UI, SYSTEM
+    }
     private static GameScene instance;
-    private ArrayList<GameObject> gameObjects;
-    private ArrayList<GameObject> uiObjects;
+    private Map<eLayer, ArrayList<GameObject>> layers;
     private Player player;
     private Camera camera;
 
     private GameScene() {
         instance = null;
-        gameObjects = null;
-        uiObjects = null;
         player = null;
         camera = null;
     }
@@ -33,54 +35,45 @@ public class GameScene {
 
     public boolean onTouchEvent(MotionEvent event) {
         boolean result = false;
-        for (GameObject o : gameObjects)
-            result |= o.onTouchEvent(event);
-        for (GameObject ui : uiObjects)
-            result |= ui.onTouchEvent(event);
+        for (eLayer key : eLayer.values())
+            for (GameObject o : layers.get(key))
+                result |= o.onTouchEvent(event);
         return result;
     }
 
     public void update(float deltaTime) {
         camera.update(deltaTime);
-        for (GameObject o : gameObjects)
-            o.update(deltaTime);
-        for (GameObject ui : uiObjects)
-            ui.update(deltaTime);
+        for (eLayer key : eLayer.values())
+            for (GameObject o : layers.get(key))
+                o.update(deltaTime);
     }
 
     public void draw(Canvas canvas) {
         camera.on(canvas);
-        for (GameObject o : gameObjects)
-            o.draw(canvas);
+        for (eLayer key : eLayer.values()) {
+            if (key == eLayer.UI) continue;
+            for (GameObject o : layers.get(key)) {
+                o.draw(canvas);
+            }
+        }
         camera.off(canvas);
 
-        for (GameObject ui : uiObjects)
+        for (GameObject ui : layers.get(eLayer.UI))
             ui.draw(canvas);
     }
 
     public void init() {
-        gameObjects = new ArrayList<>();
-        uiObjects = new ArrayList<>();
+        layers = new HashMap<>();
+        for (eLayer layer : eLayer.values())
+            layers.put(layer, new ArrayList<>());
 
         player = new Player();
         player.setBitmap(R.mipmap.player);
         player.setPosition(50.0f, 50.0f);
-        gameObjects.add(player);
+        layers.get(eLayer.PLAYER).add(player);
 
         camera = new Camera();
         camera.setPlayer(player);
-
-        // 테스트용 적
-        Enemy test = new Enemy();
-        test.setBitmap(R.mipmap.circle);
-        test.setPlayer(player);
-        gameObjects.add(test);
-
-        Enemy test2 = new Enemy();
-        test2.setBitmap(R.mipmap.circle);
-        test2.setPlayer(player);
-        test2.setPosition(500.0f, 50.0f);
-        gameObjects.add(test2);
 
         GameObject stick = new GameObject();
         stick.setBitmap(R.mipmap.controller);
@@ -88,22 +81,30 @@ public class GameScene {
         controller.setPlayer(player);
         controller.setBitmap(R.mipmap.controller_base);
         controller.setStick(stick);
-        uiObjects.add(controller);
+        layers.get(eLayer.UI).add(controller);
+
+        // 테스트용 적
+        Enemy enemy = new Enemy();
+        enemy.setBitmap(R.mipmap.circle);
+        enemy.setPlayer(player);
+        layers.get(eLayer.ENEMY).add(enemy);
     }
 
-    public void add(GameObject gameObject) {
-        GameView.view.post(() -> gameObjects.add(gameObject));
+    public void add(eLayer layer, GameObject gameObject) {
+        GameView.view.post(new Runnable() {
+            @Override
+            public void run() {
+                layers.get(layer).add(gameObject);
+            }
+        });
     }
 
-    public void addUI(GameObject uiObject) {
-        GameView.view.post(() -> uiObjects.add(uiObject));
-    }
-
-    public void remove(GameObject gameObject) {
-        GameView.view.post(() -> gameObjects.remove(gameObject));
-    }
-
-    public void removeUI(GameObject uiObject) {
-        GameView.view.post(() -> uiObjects.remove(uiObject));
+    public void remove(eLayer layer, GameObject gameObject) {
+        GameView.view.post(new Runnable() {
+            @Override
+            public void run() {
+                layers.get(layer).add(gameObject);
+            }
+        });
     }
 }
