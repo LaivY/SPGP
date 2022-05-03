@@ -82,3 +82,4 @@
 
 # 🎙️ 5. 발표 자료
 - 1차 발표 : https://youtu.be/bxgP-gRLBhU
+- 2차 발표 : https://youtu.be/vNJVmIArP3E
