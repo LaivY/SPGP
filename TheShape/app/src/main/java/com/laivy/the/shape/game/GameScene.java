@@ -5,6 +5,7 @@ import android.view.MotionEvent;
 
 import com.laivy.the.shape.R;
 import com.laivy.the.shape.framework.GameObject;
+import com.laivy.the.shape.game.object.Background;
 import com.laivy.the.shape.game.object.CollisionChecker;
 import com.laivy.the.shape.game.object.Controller;
 import com.laivy.the.shape.game.object.Enemy;
@@ -18,7 +19,7 @@ import java.util.Map;
 
 public class GameScene {
     public enum eLayer {
-        BULLET, EXP, ENEMY, PLAYER, UI, SYSTEM
+        BACKGROUND, BULLET, EXP, ENEMY, PLAYER, UI, SYSTEM
     }
     private static GameScene instance;
     private Map<eLayer, ArrayList<GameObject>> layers;
@@ -53,6 +54,7 @@ public class GameScene {
     }
 
     public void draw(Canvas canvas) {
+        // 모든 객체 그리기
         camera.on(canvas);
         for (eLayer key : eLayer.values()) {
             if (key == eLayer.UI) continue;
@@ -62,6 +64,7 @@ public class GameScene {
         }
         camera.off(canvas);
 
+        // UI는 카메라의 영향을 받지 않는다.
         for (GameObject ui : layers.get(eLayer.UI))
             ui.draw(canvas);
     }
@@ -75,12 +78,17 @@ public class GameScene {
         // 플레이어
         player = new Player();
         player.setBitmap(R.mipmap.player);
-        player.setPosition(50.0f, 50.0f);
         layers.get(eLayer.PLAYER).add(player);
 
         // 카메라
         camera = new Camera();
         camera.setPlayer(player);
+
+        // 배경
+        Background background = new Background();
+        background.setBitmap(R.mipmap.background);
+        background.setCamera(camera);
+        layers.get(eLayer.BACKGROUND).add(background);
 
         // 컨트롤러
         GameObject stick = new GameObject();
