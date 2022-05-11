@@ -1,7 +1,9 @@
 package com.laivy.the.shape.game.object;
 
+import android.graphics.PointF;
 import android.graphics.RectF;
 
+import com.laivy.the.shape.R;
 import com.laivy.the.shape.framework.GameObject;
 import com.laivy.the.shape.game.GameScene;
 
@@ -28,7 +30,23 @@ public class CollisionChecker extends GameObject {
 
                 Bullet bullet = (Bullet) o2;
                 if (isCollided(enemy.getHitBox(), bullet.getHitBox())) {
+                    // 총알 위치에 폭발 이펙트 추가
+                    PointF bulletPosition = bullet.getPosition();
+                    Sprite sprite = new Sprite();
+                    sprite.addImage(R.mipmap.explosition0);
+                    sprite.addImage(R.mipmap.explosition1);
+                    sprite.addImage(R.mipmap.explosition2);
+                    sprite.addImage(R.mipmap.explosition3);
+                    sprite.addImage(R.mipmap.explosition4);
+                    sprite.addImage(R.mipmap.explosition5);
+                    sprite.setOnlyOnce(true);
+                    sprite.setPosition(bulletPosition.x, bulletPosition.y);
+                    GameScene.getInstance().add(GameScene.eLayer.SPRITE, sprite);
+
+                    // 총알 삭제
                     GameScene.getInstance().remove(GameScene.eLayer.BULLET, bullet);
+
+                    // 적에게 피격당했다는 것을 알려줌
                     enemy.onHit(bullet);
                 }
             }

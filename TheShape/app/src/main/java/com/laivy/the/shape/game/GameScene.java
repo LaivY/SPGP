@@ -12,6 +12,7 @@ import com.laivy.the.shape.game.object.Enemy;
 import com.laivy.the.shape.game.object.EnemyGenerator;
 import com.laivy.the.shape.game.object.ExpBar;
 import com.laivy.the.shape.game.object.Player;
+import com.laivy.the.shape.game.object.Sprite;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,7 +20,7 @@ import java.util.Map;
 
 public class GameScene {
     public enum eLayer {
-        BACKGROUND, BULLET, EXP, ENEMY, PLAYER, UI, SYSTEM
+        BACKGROUND, BULLET, EXP, ENEMY, PLAYER, SPRITE, UI, SYSTEM
     }
     private static GameScene instance;
     private Map<eLayer, ArrayList<GameObject>> layers;
