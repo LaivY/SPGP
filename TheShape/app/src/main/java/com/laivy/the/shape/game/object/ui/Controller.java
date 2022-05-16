@@ -1,10 +1,11 @@
-package com.laivy.the.shape.game.object;
+package com.laivy.the.shape.game.object.ui;
 
 import android.graphics.Canvas;
 import android.graphics.PointF;
 import android.view.MotionEvent;
 
 import com.laivy.the.shape.framework.GameObject;
+import com.laivy.the.shape.game.object.Player;
 
 public class Controller extends GameObject {
     private final float CONTROLLER_STICK_RADIUS = 80.0f;

@@ -1,4 +1,4 @@
-package com.laivy.the.shape.game.object;
+package com.laivy.the.shape.game.object.system;
 
 import android.graphics.PointF;
 import android.graphics.RectF;
@@ -6,6 +6,11 @@ import android.graphics.RectF;
 import com.laivy.the.shape.R;
 import com.laivy.the.shape.framework.GameObject;
 import com.laivy.the.shape.game.GameScene;
+import com.laivy.the.shape.game.object.Bullet;
+import com.laivy.the.shape.game.object.Enemy;
+import com.laivy.the.shape.game.object.Exp;
+import com.laivy.the.shape.game.object.Player;
+import com.laivy.the.shape.game.object.Sprite;
 
 import java.util.ArrayList;
 

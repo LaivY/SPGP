@@ -1,4 +1,4 @@
-package com.laivy.the.shape.game.object;
+package com.laivy.the.shape.game.object.system;
 
 import android.graphics.PointF;
 
@@ -6,6 +6,8 @@ import com.laivy.the.shape.R;
 import com.laivy.the.shape.framework.GameObject;
 import com.laivy.the.shape.framework.Utility;
 import com.laivy.the.shape.game.GameScene;
+import com.laivy.the.shape.game.object.Enemy;
+import com.laivy.the.shape.game.object.Player;
 
 public class EnemyGenerator extends GameObject {
     private Player player;

@@ -13,8 +13,10 @@ import com.laivy.the.shape.game.GameScene;
 public class Player extends GameObject {
     private final float MAX_ROTATE_DEGREE = 180.0f;
     private boolean isMove;
+    private int maxHp;
     private int hp;
     private int exp;
+    private int[] reqExp;
     private int level;
     private int dmg;
     private float fireSpeed;
@@ -31,10 +33,12 @@ public class Player extends GameObject {
 
     public Player() {
         isMove = false;
-        hp = R.dimen.PLAYER_HP;
+        maxHp = (int) Metrics.getFloat(R.dimen.PLAYER_HP);
+        hp = maxHp;
         exp = 0;
+        reqExp = new int[]{ 2, 6, 7, 8, 9, 10 };
         level = 1;
-        dmg = R.dimen.PLAYER_DMG;
+        dmg = (int) Metrics.getFloat(R.dimen.PLAYER_DMG);
         fireSpeed = Metrics.getFloat(R.dimen.PLAYER_FIRE_SPEED);
         fireTimer = 0.0f;
         targetRotateDegree = 0.0f;
@@ -64,12 +68,19 @@ public class Player extends GameObject {
 
     public void onHit(GameObject object) {
         if (object instanceof Enemy) {
+            hp -= 10;
+
             Enemy enemy = (Enemy) object;
-            invincibleTime = 3.0f;
+            invincibleTime = 0.5f;
             knockBackDuration = 0.5f;
             knockBackPower = 100.0f;
             knockBackDirection = enemy.getDirection();
         }
+    }
+
+    public void onLevelUp() {
+        exp = 0;
+        ++level;
     }
 
     @Override
@@ -131,6 +142,11 @@ public class Player extends GameObject {
             super.update(deltaTime);
         }
 
+        // 레벨업 확인
+//        if (exp >= reqExp[level - 1]) {
+//            onLevelUp();
+//        }
+
         // 총 발사
         if (fireTimer >= fireSpeed) fire();
         fireTimer += deltaTime;
@@ -154,6 +170,7 @@ public class Player extends GameObject {
 
         Bullet bullet = new Bullet();
         bullet.setBitmap(R.mipmap.bullet);
+        bullet.setDamage(dmg);
         bullet.setPosition(position.x, position.y);
         bullet.setDirection(direction.x, direction.y);
         GameScene.getInstance().add(GameScene.eLayer.BULLET, bullet);
@@ -188,8 +205,20 @@ public class Player extends GameObject {
         direction.set(x, y);
     }
 
+    public int getMaxHp() {
+        return maxHp;
+    }
+
+    public int getHp() {
+        return hp;
+    }
+
     public int getExp() {
         return exp;
+    }
+
+    public int getReqExp() {
+        return reqExp[level - 1];
     }
 
     public int getLevel() {

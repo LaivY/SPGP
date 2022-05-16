@@ -54,7 +54,11 @@ public class Bullet extends GameObject {
         canvas.restore();
     }
 
-    void setDirection(float x, float y) {
+    public void setDamage(int damage) {
+        dmg = damage;
+    }
+
+    public void setDirection(float x, float y) {
         direction.set(x, y);
         degree = (float) Math.toDegrees(Math.atan(x / -y));
         if (y > 0) {

@@ -1,4 +1,4 @@
-package com.laivy.the.shape.game.object;
+package com.laivy.the.shape.game.object.ui;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -9,14 +9,16 @@ import android.util.Log;
 import com.laivy.the.shape.R;
 import com.laivy.the.shape.framework.GameObject;
 import com.laivy.the.shape.framework.Metrics;
+import com.laivy.the.shape.game.object.Player;
 
 public class ExpBar extends GameObject {
     private Paint barPaint;
     private RectF base;
     private RectF bar;
     private float width;
-    private int exp;
-    private float remain;
+    private int playerExp = 0;
+    private float exp;
+    private float delta;
     private Player player;
 
     public ExpBar() {
@@ -26,28 +28,35 @@ public class ExpBar extends GameObject {
         base.offset(Metrics.width / 2.0f, 0.0f);
         bar = new RectF(-width / 2.0f, 0.0f, -width / 2.0f, 30.0f);
         bar.offset(Metrics.width / 2.0f, 0.0f);
-        exp = 0;
-        remain = 0.0f;
+        exp = 0.0f;
+        delta = 0.0f;
         player = null;
     }
 
     @Override
     public void update(float deltaTime) {
         if (player == null) return;
-        int exp = player.getExp();
 
-        if (this.exp != exp) {
-            remain += width * (exp - this.exp) / (4 + player.getLevel());
-            this.exp = exp;
+        if (playerExp != player.getExp()) {
+            delta += player.getExp() - playerExp;
+            playerExp = player.getExp();
         }
-        if (remain > 0.0f) {
-            remain -= 500.0f * deltaTime;
-            if (remain < 0.0f) {
-                bar.right = Math.min(Metrics.width / 2.0f + width / 2.0f, bar.right + 500.0f * deltaTime + remain + 0.01f);
-                remain = 0.0f;
+        if (delta != 0.0f) {
+            float temp;
+            if (delta > 0.0f) {
+                temp = Math.max(0.0f, delta - deltaTime);
+                exp += delta - temp;
             }
-            else bar.right = Math.min(Metrics.width / 2.0f + width / 2.0f, bar.right + 500.0f * deltaTime);
+            else {
+                temp = Math.min(0.0f, delta + deltaTime);
+                exp += temp - delta;
+            }
+            delta = temp;
         }
+        float reqExp = player.getReqExp();
+        float div = exp / reqExp;
+
+        bar.right = Metrics.width / 2.0f - width / 2.0f + width * div;
         super.update(deltaTime);
     }
 

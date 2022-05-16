@@ -6,13 +6,12 @@ import android.view.MotionEvent;
 import com.laivy.the.shape.R;
 import com.laivy.the.shape.framework.GameObject;
 import com.laivy.the.shape.game.object.Background;
-import com.laivy.the.shape.game.object.CollisionChecker;
-import com.laivy.the.shape.game.object.Controller;
-import com.laivy.the.shape.game.object.Enemy;
-import com.laivy.the.shape.game.object.EnemyGenerator;
-import com.laivy.the.shape.game.object.ExpBar;
+import com.laivy.the.shape.game.object.system.CollisionChecker;
+import com.laivy.the.shape.game.object.ui.Controller;
+import com.laivy.the.shape.game.object.system.EnemyGenerator;
+import com.laivy.the.shape.game.object.ui.ExpBar;
 import com.laivy.the.shape.game.object.Player;
-import com.laivy.the.shape.game.object.Sprite;
+import com.laivy.the.shape.game.object.HPBar;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -104,6 +103,11 @@ public class GameScene {
         ExpBar expBar = new ExpBar();
         expBar.setPlayer(player);
         layers.get(eLayer.UI).add(expBar);
+
+        // 체력바
+        HPBar hpBar = new HPBar();
+        hpBar.setPlayer(player);
+        layers.get(eLayer.PLAYER).add(hpBar);
 
         // 충돌체커
         CollisionChecker checker = new CollisionChecker();
