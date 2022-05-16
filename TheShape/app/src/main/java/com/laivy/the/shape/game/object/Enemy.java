@@ -12,20 +12,52 @@ public class Enemy extends GameObject {
     private int hp;
     private float speed;
     private float rotate;
+    private float knockBackDuration;
     private float knockBackTimer;
     private float knockBackPower;
     private PointF knockBackDirection;
+    private PointF direction;
     private Player player;
 
     public Enemy() {
         hp = 10;
         speed = 80.0f;
         rotate = 0.0f;
+        knockBackDuration = 0.0f;
         knockBackTimer = 0.0f;
         knockBackPower = 0.0f;
-        knockBackDirection = null;
+        knockBackDirection = new PointF();
+        direction = new PointF();
         player = null;
         hitBox = new RectF(-30.0f, -30.0f, 30.0f, 30.0f);
+    }
+
+    public void onHit(GameObject object) {
+        if (object instanceof Bullet) {
+            Bullet bullet = (Bullet) object;
+            hp -= bullet.getDmg();
+            knockBackDuration = 0.5f;
+            knockBackPower = 300.0f;
+
+            PointF bulletDirection = bullet.getDirection();
+            knockBackDirection.x = bulletDirection.x;
+            knockBackDirection.y = bulletDirection.y;
+        }
+        else if (object instanceof Player) {
+            //Player player = (Player) object;
+            knockBackDuration = 0.5f;
+            knockBackPower = 500.0f;
+
+            knockBackDirection.x = -direction.x;
+            knockBackDirection.y = -direction.y;
+        }
+    }
+
+    public void onDestroy() {
+        Exp exp = new Exp();
+        exp.setBitmap(R.mipmap.exp);
+        exp.setPosition(position.x, position.y);
+        GameScene.getInstance().add(GameScene.eLayer.EXP, exp);
     }
 
     @Override
@@ -40,16 +72,23 @@ public class Enemy extends GameObject {
         }
 
         // 넉백
-        if (knockBackTimer > 0.0f) {
+        if (knockBackDuration != 0.0f) {
+            float delta = (float) (knockBackPower * Math.cos(knockBackTimer * Math.PI / 2.0f / knockBackDuration));
+
             position.offset(
-            knockBackDirection.x * knockBackPower * deltaTime,
-            knockBackDirection.y * knockBackPower * deltaTime
+                knockBackDirection.x * delta * deltaTime,
+                knockBackDirection.y * delta * deltaTime
             );
             hitBox.offset(
-                knockBackDirection.x * knockBackPower * deltaTime,
-                knockBackDirection.y * knockBackPower * deltaTime
+                knockBackDirection.x * delta * deltaTime,
+                knockBackDirection.y * delta * deltaTime
             );
-            knockBackTimer = Math.max(0.0f, knockBackTimer - deltaTime);
+
+            knockBackTimer += deltaTime;
+            if (knockBackTimer > knockBackDuration) {
+                knockBackDuration = 0.0f;
+                knockBackTimer = 0.0f;
+            }
         }
         else {
             // 플레이어를 쫓아다니도록 설정
@@ -59,6 +98,8 @@ public class Enemy extends GameObject {
             float length = (float) Math.sqrt(dx * dx + dy * dy);
             dx /= length;
             dy /= length;
+            direction.x = dx;
+            direction.y = dy;
             position.offset(dx * speed * deltaTime, dy * speed * deltaTime);
             hitBox.offset(dx * speed * deltaTime, dy * speed * deltaTime);
 
@@ -80,25 +121,15 @@ public class Enemy extends GameObject {
         canvas.restore();
     }
 
-    public void onHit(Bullet bullet) {
-        hp -= bullet.getDmg();
-        knockBackTimer = 0.5f;
-        knockBackPower = 100.0f;
-        knockBackDirection = bullet.getDirection();
-    }
-
-    public void onDestroy() {
-        Exp exp = new Exp();
-        exp.setBitmap(R.mipmap.exp);
-        exp.setPosition(position.x, position.y);
-        GameScene.getInstance().add(GameScene.eLayer.EXP, exp);
-    }
-
     public void addHp(int hp) {
         this.hp += hp;
     }
 
     public void setPlayer(Player player) {
         this.player = player;
+    }
+
+    public PointF getDirection() {
+        return direction;
     }
 }

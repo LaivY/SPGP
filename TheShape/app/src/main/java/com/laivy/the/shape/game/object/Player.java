@@ -22,6 +22,11 @@ public class Player extends GameObject {
     private float targetRotateDegree;
     private float currRotateDegree;
     private float speed;
+    private float invincibleTime;
+    private float knockBackDuration;
+    private float knockBackTimer;
+    private float knockBackPower;
+    private PointF knockBackDirection;
     private PointF direction;
 
     public Player() {
@@ -35,6 +40,11 @@ public class Player extends GameObject {
         targetRotateDegree = 0.0f;
         currRotateDegree = 0.0f;
         speed = Metrics.getFloat(R.dimen.PLAYER_SPEED);
+        invincibleTime = 0.0f;
+        knockBackDuration = 0.0f;
+        knockBackTimer = 0.0f;
+        knockBackPower = 0.0f;
+        knockBackDirection = new PointF();
         direction = new PointF(0.0f, 0.0f);
         hitBox = new RectF(-20.0f, -20.0f, 20.0f, 20.0f);
     }
@@ -52,8 +62,40 @@ public class Player extends GameObject {
         return false;
     }
 
+    public void onHit(GameObject object) {
+        if (object instanceof Enemy) {
+            Enemy enemy = (Enemy) object;
+            invincibleTime = 3.0f;
+            knockBackDuration = 0.5f;
+            knockBackPower = 100.0f;
+            knockBackDirection = enemy.getDirection();
+        }
+    }
+
     @Override
     public void update(float deltaTime) {
+        // 피격 시 넉백
+        if (knockBackDuration != 0.0f) {
+            float delta = (float) (knockBackPower * Math.cos(knockBackTimer * Math.PI / 2.0f / knockBackDuration));
+
+            position.offset(
+                knockBackDirection.x * delta * deltaTime,
+                knockBackDirection.y * delta * deltaTime
+            );
+            hitBox.offset(
+                knockBackDirection.x * delta * deltaTime,
+                knockBackDirection.y * delta * deltaTime
+            );
+
+            super.update(deltaTime);
+            knockBackTimer += deltaTime;
+            if (knockBackTimer > knockBackDuration) {
+                knockBackDuration = 0.0f;
+                knockBackTimer = 0.0f;
+            }
+            return;
+        }
+
         // 회전해야할 각도가 남아있다면 회전
         if (targetRotateDegree != 0.0f) {
             int sign = (int) (targetRotateDegree / Math.abs(targetRotateDegree));
@@ -92,6 +134,9 @@ public class Player extends GameObject {
         // 총 발사
         if (fireTimer >= fireSpeed) fire();
         fireTimer += deltaTime;
+
+        // 무적 시간 감소
+        invincibleTime = Math.max(0.0f, invincibleTime - deltaTime);
     }
 
     @Override
@@ -149,6 +194,10 @@ public class Player extends GameObject {
 
     public int getLevel() {
         return level;
+    }
+
+    public float getInvincibleTime() {
+        return invincibleTime;
     }
 
     public void addExp(int exp) {

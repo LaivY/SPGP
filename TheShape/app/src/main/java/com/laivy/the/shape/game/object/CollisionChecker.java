@@ -13,18 +13,28 @@ public class CollisionChecker extends GameObject {
 
     @Override
     public void update(float deltaTime) {
-        checkEnemyAndBullet();
-        checkPlayerAndExp();
+        checkEnemyCollision();
+        checkPlayerCollision();
     }
 
-    public void checkEnemyAndBullet() {
-        ArrayList<GameObject> bullets = GameScene.getInstance().getLayer(GameScene.eLayer.BULLET);
+    public void checkEnemyCollision() {
+        // 적과 플레이어, 적과 총알 간의 충돌 처리를 한다.
+        Player player = GameScene.getInstance().getPlayer();
         ArrayList<GameObject> enemies = GameScene.getInstance().getLayer(GameScene.eLayer.ENEMY);
+        ArrayList<GameObject> bullets = GameScene.getInstance().getLayer(GameScene.eLayer.BULLET);
 
         for (GameObject o1 : enemies) {
             if (!o1.getIsValid()) continue;
             Enemy enemy = (Enemy) o1;
 
+            // 적과 플레이어 간의 충돌 처리
+            if (player.getInvincibleTime() == 0.0f &&
+                isCollided(enemy.getHitBox(), player.getHitBox())) {
+                enemy.onHit(player);
+                player.onHit(enemy);
+            }
+
+            // 적과 총알 간의 충돌 처리
             for (GameObject o2 : bullets) {
                 if (!o2.getIsValid()) continue;
 
@@ -53,7 +63,7 @@ public class CollisionChecker extends GameObject {
         }
     }
 
-    public void checkPlayerAndExp() {
+    public void checkPlayerCollision() {
         Player player = GameScene.getInstance().getPlayer();
         ArrayList<GameObject> exps = GameScene.getInstance().getLayer(GameScene.eLayer.EXP);
 
