@@ -11,7 +11,6 @@ import com.laivy.the.shape.game.object.ui.Controller;
 import com.laivy.the.shape.game.object.system.EnemyGenerator;
 import com.laivy.the.shape.game.object.ui.ExpBar;
 import com.laivy.the.shape.game.object.Player;
-import com.laivy.the.shape.game.object.HPBar;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,7 +18,7 @@ import java.util.Map;
 
 public class GameScene {
     public enum eLayer {
-        BACKGROUND, BULLET, EXP, ENEMY, PLAYER, SPRITE, UI, SYSTEM
+        BACKGROUND, BULLET, EXP, ENEMY, PLAYER, SPRITE, UI, TEXT, SYSTEM
     }
     private static GameScene instance;
     private Map<eLayer, ArrayList<GameObject>> layers;
@@ -103,11 +102,6 @@ public class GameScene {
         ExpBar expBar = new ExpBar();
         expBar.setPlayer(player);
         layers.get(eLayer.UI).add(expBar);
-
-        // 체력바
-        HPBar hpBar = new HPBar();
-        hpBar.setPlayer(player);
-        layers.get(eLayer.PLAYER).add(hpBar);
 
         // 충돌체커
         CollisionChecker checker = new CollisionChecker();

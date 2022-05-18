@@ -90,4 +90,8 @@ public class GameObject {
     public RectF getHitBox() {
         return hitBox;
     }
+
+    public float getBitmapHeight() {
+        return bitmapHeight;
+    }
 }

@@ -83,6 +83,8 @@ public class ExpBar extends GameObject {
 
         barPaint.setColor(0xFF00b7ee);
         canvas.drawRect(bar, barPaint);
+
+        canvas.drawText("hello, world", 0.0f, 0.0f, paint);
     }
 
     public void setPlayer(Player player) {

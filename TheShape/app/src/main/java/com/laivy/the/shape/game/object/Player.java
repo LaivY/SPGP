@@ -6,9 +6,11 @@ import android.graphics.RectF;
 import android.view.MotionEvent;
 
 import com.laivy.the.shape.R;
+import com.laivy.the.shape.framework.BitmapPool;
 import com.laivy.the.shape.framework.GameObject;
 import com.laivy.the.shape.framework.Metrics;
 import com.laivy.the.shape.game.GameScene;
+import com.laivy.the.shape.game.object.ui.HPBar;
 
 public class Player extends GameObject {
     private final float MAX_ROTATE_DEGREE = 180.0f;
@@ -18,7 +20,7 @@ public class Player extends GameObject {
     private int exp;
     private int[] reqExp;
     private int level;
-    private int dmg;
+    private int damage;
     private float fireSpeed;
     private float fireTimer;
     private float targetRotateDegree;
@@ -30,26 +32,44 @@ public class Player extends GameObject {
     private float knockBackPower;
     private PointF knockBackDirection;
     private PointF direction;
+    private HPBar hpBar;
 
     public Player() {
+        // 컨트롤러로 조종 중인지
         isMove = false;
+
+        // 플레이어 관련
         maxHp = (int) Metrics.getFloat(R.dimen.PLAYER_HP);
         hp = maxHp;
+        speed = Metrics.getFloat(R.dimen.PLAYER_SPEED);
+        direction = new PointF(0.0f, -1.0f);
+        level = 1;
         exp = 0;
         reqExp = new int[]{ 2, 6, 7, 8, 9, 10 };
-        level = 1;
-        dmg = (int) Metrics.getFloat(R.dimen.PLAYER_DMG);
+        invincibleTime = 0.0f;
+
+        // 총알 관련
+        damage = (int) Metrics.getFloat(R.dimen.PLAYER_DMG);
         fireSpeed = Metrics.getFloat(R.dimen.PLAYER_FIRE_SPEED);
         fireTimer = 0.0f;
+        
+        // 회전
         targetRotateDegree = 0.0f;
         currRotateDegree = 0.0f;
-        speed = Metrics.getFloat(R.dimen.PLAYER_SPEED);
-        invincibleTime = 0.0f;
+
+        // 넉백
         knockBackDuration = 0.0f;
         knockBackTimer = 0.0f;
         knockBackPower = 0.0f;
         knockBackDirection = new PointF();
-        direction = new PointF(0.0f, 0.0f);
+        
+        // 체력바
+        hpBar = new HPBar();
+        hpBar.setHeightOffset(BitmapPool.get(R.mipmap.player).getHeight() * 0.8f);
+        hpBar.setValue(hp);
+        hpBar.setMaxValue(maxHp);
+        
+        // 히트박스
         hitBox = new RectF(-20.0f, -20.0f, 20.0f, 20.0f);
     }
 
@@ -98,6 +118,12 @@ public class Player extends GameObject {
                 knockBackDirection.y * delta * deltaTime
             );
 
+            // 체력바 최신화
+            hpBar.setPosition(position.x, position.y);
+            hpBar.setValue(hp);
+            hpBar.setMaxValue(maxHp);
+            hpBar.update(deltaTime);
+
             super.update(deltaTime);
             knockBackTimer += deltaTime;
             if (knockBackTimer > knockBackDuration) {
@@ -139,12 +165,18 @@ public class Player extends GameObject {
         if (isMove) {
             position.offset(direction.x * speed * deltaTime, direction.y * speed * deltaTime);
             hitBox.offset(direction.x * speed * deltaTime, direction.y * speed * deltaTime);
-            super.update(deltaTime);
         }
+        super.update(deltaTime);
 
         // 총 발사
         if (fireTimer >= fireSpeed) fire();
         fireTimer += deltaTime;
+
+        // 체력바 최신화
+        hpBar.setPosition(position.x, position.y);
+        hpBar.setValue(hp);
+        hpBar.setMaxValue(maxHp);
+        hpBar.update(deltaTime);
 
         // 무적 시간 감소
         invincibleTime = Math.max(0.0f, invincibleTime - deltaTime);
@@ -152,20 +184,17 @@ public class Player extends GameObject {
 
     @Override
     public void draw(Canvas canvas) {
-        //canvas.drawRect(hitBox, paint);
         canvas.save();
         canvas.rotate(currRotateDegree, position.x, position.y);
         canvas.drawBitmap(bitmap, null, dstRect, null);
         canvas.restore();
+        hpBar.draw(canvas);
     }
 
     public void fire() {
-        if (direction.x == 0.0f && direction.y == 0.0f)
-            return;
-
         Bullet bullet = new Bullet();
         bullet.setBitmap(R.mipmap.bullet);
-        bullet.setDamage(dmg);
+        bullet.setDamage(damage);
         bullet.setPosition(position.x, position.y);
         bullet.setDirection(direction.x, direction.y);
         GameScene.getInstance().add(GameScene.eLayer.BULLET, bullet);

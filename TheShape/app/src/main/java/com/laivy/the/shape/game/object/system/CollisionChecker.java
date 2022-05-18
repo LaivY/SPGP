@@ -1,5 +1,6 @@
 package com.laivy.the.shape.game.object.system;
 
+import android.graphics.Color;
 import android.graphics.PointF;
 import android.graphics.RectF;
 
@@ -11,6 +12,7 @@ import com.laivy.the.shape.game.object.Enemy;
 import com.laivy.the.shape.game.object.Exp;
 import com.laivy.the.shape.game.object.Player;
 import com.laivy.the.shape.game.object.Sprite;
+import com.laivy.the.shape.game.object.ui.TextObject;
 
 import java.util.ArrayList;
 
@@ -37,6 +39,16 @@ public class CollisionChecker extends GameObject {
                 isCollided(enemy.getHitBox(), player.getHitBox())) {
                 enemy.onHit(player);
                 player.onHit(enemy);
+
+                // 데미지 표기
+                PointF playerPosition = player.getPosition();
+                TextObject damageText = new TextObject();
+                damageText.setColor(Color.RED);
+                damageText.setTextSize(40.0f);
+                damageText.setText("10");
+                damageText.setLifeTime(0.5f);
+                damageText.setPosition(playerPosition.x, playerPosition.y - player.getBitmapHeight());
+                GameScene.getInstance().add(GameScene.eLayer.TEXT, damageText);
             }
 
             // 적과 총알 간의 충돌 처리
@@ -60,6 +72,16 @@ public class CollisionChecker extends GameObject {
 
                     // 총알 삭제
                     GameScene.getInstance().remove(GameScene.eLayer.BULLET, bullet);
+
+                    // 데미지 표기
+                    PointF enemyPosition = enemy.getPosition();
+                    TextObject damageText = new TextObject();
+                    damageText.setColor(Color.WHITE);
+                    damageText.setTextSize(40.0f);
+                    damageText.setText("10");
+                    damageText.setLifeTime(0.5f);
+                    damageText.setPosition(enemyPosition.x, enemyPosition.y - enemy.getBitmapHeight());
+                    GameScene.getInstance().add(GameScene.eLayer.TEXT, damageText);
 
                     // 적에게 피격당했다는 것을 알려줌
                     enemy.onHit(bullet);
