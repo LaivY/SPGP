@@ -142,11 +142,6 @@ public class Player extends GameObject {
             super.update(deltaTime);
         }
 
-        // 레벨업 확인
-//        if (exp >= reqExp[level - 1]) {
-//            onLevelUp();
-//        }
-
         // 총 발사
         if (fireTimer >= fireSpeed) fire();
         fireTimer += deltaTime;
