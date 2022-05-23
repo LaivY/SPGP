@@ -121,8 +121,8 @@ public class Enemy extends GameObject {
         canvas.restore();
     }
 
-    public void addHp(int hp) {
-        this.hp += hp;
+    public void setHp(int hp) {
+        this.hp = hp;
     }
 
     public void setPlayer(Player player) {

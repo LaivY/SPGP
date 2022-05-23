@@ -21,11 +21,8 @@ public class GameObject {
     protected PointF position;
 
     public GameObject() {
-        if (paint == null) {
+        if (paint == null)
             paint = new Paint();
-            paint.setColor(Color.RED);
-            paint.setStyle(Paint.Style.STROKE);
-        }
         if (matrix == null) {
             matrix = new Matrix();
         }

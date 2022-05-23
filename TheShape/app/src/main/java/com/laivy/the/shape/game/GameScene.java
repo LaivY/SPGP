@@ -24,11 +24,13 @@ public class GameScene {
     private Map<eLayer, ArrayList<GameObject>> layers;
     private Player player;
     private Camera camera;
+    private boolean isRunning;
 
     private GameScene() {
         instance = null;
         player = null;
         camera = null;
+        isRunning = true;
     }
 
     public static GameScene getInstance() {
@@ -46,6 +48,8 @@ public class GameScene {
     }
 
     public void update(float deltaTime) {
+        if (!isRunning) return;
+
         camera.update(deltaTime);
         for (eLayer key : eLayer.values())
             for (GameObject o : layers.get(key))
@@ -93,14 +97,12 @@ public class GameScene {
         GameObject stick = new GameObject();
         stick.setBitmap(R.mipmap.controller);
         Controller controller = new Controller();
-        controller.setPlayer(player);
         controller.setBitmap(R.mipmap.controller_base);
         controller.setStick(stick);
         layers.get(eLayer.UI).add(controller);
 
         // 경험치바
         ExpBar expBar = new ExpBar();
-        expBar.setPlayer(player);
         layers.get(eLayer.UI).add(expBar);
 
         // 충돌체커
@@ -109,7 +111,6 @@ public class GameScene {
 
         // 적 생성기
         EnemyGenerator enemyGenerator = new EnemyGenerator();
-        enemyGenerator.setPlayer(player);
         layers.get(eLayer.SYSTEM).add(enemyGenerator);
     }
 
@@ -120,6 +121,10 @@ public class GameScene {
     public void remove(eLayer layer, GameObject gameObject) {
         gameObject.setIsValid(false);
         GameView.view.post(() -> layers.get(layer).add(gameObject));
+    }
+
+    public void setRunning(boolean running) {
+        isRunning = running;
     }
 
     public ArrayList<GameObject> getLayer(eLayer layer) {

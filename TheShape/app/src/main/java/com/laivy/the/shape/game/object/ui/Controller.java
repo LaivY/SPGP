@@ -5,18 +5,17 @@ import android.graphics.PointF;
 import android.view.MotionEvent;
 
 import com.laivy.the.shape.framework.GameObject;
+import com.laivy.the.shape.game.GameScene;
 import com.laivy.the.shape.game.object.Player;
 
 public class Controller extends GameObject {
     private final float CONTROLLER_STICK_RADIUS = 80.0f;
     private boolean isActive;
-    private Player player;
     private PointF currPosition;
     private GameObject stick;
 
     public Controller() {
         isActive = false;
-        player = null;
         currPosition = new PointF();
         stick = null;
     }
@@ -50,6 +49,7 @@ public class Controller extends GameObject {
                     stick.setPosition(position.x + dx, position.y + dy);
                 }
 
+                Player player = GameScene.getInstance().getPlayer();
                 if (player != null) {
                     float dx = currPosition.x - position.x;
                     float dy = currPosition.y - position.y;
@@ -75,10 +75,6 @@ public class Controller extends GameObject {
             if (stick != null)
                 stick.draw(canvas);
         }
-    }
-
-    public void setPlayer(Player player) {
-        this.player = player;
     }
 
     public void setStick(GameObject stick) {

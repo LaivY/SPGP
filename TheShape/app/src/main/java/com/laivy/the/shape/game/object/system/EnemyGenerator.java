@@ -10,19 +10,19 @@ import com.laivy.the.shape.game.object.Enemy;
 import com.laivy.the.shape.game.object.Player;
 
 public class EnemyGenerator extends GameObject {
-    private Player player;
     private float spawnTime;
     private float timer;
+    private float playTime;
 
     public EnemyGenerator() {
-        player = null;
         spawnTime = 3.0f;
         timer = 3.0f;
+        playTime = 0.0f;
     }
 
     @Override
     public void update(float deltaTime) {
-        if (player == null) return;
+        Player player = GameScene.getInstance().getPlayer();
 
         if (timer > spawnTime) {
             int type = Utility.getRandom(0, 1);
@@ -44,9 +44,6 @@ public class EnemyGenerator extends GameObject {
         }
 
         timer += deltaTime;
-    }
-
-    public void setPlayer(Player player) {
-        this.player = player;
+        playTime = deltaTime;
     }
 }

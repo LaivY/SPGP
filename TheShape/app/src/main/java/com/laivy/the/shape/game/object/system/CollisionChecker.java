@@ -78,7 +78,7 @@ public class CollisionChecker extends GameObject {
                     TextObject damageText = new TextObject();
                     damageText.setColor(Color.WHITE);
                     damageText.setTextSize(40.0f);
-                    damageText.setText("10");
+                    damageText.setText(Integer.toString(player.getDamage()));
                     damageText.setLifeTime(0.5f);
                     damageText.setPosition(enemyPosition.x, enemyPosition.y - enemy.getBitmapHeight());
                     GameScene.getInstance().add(GameScene.eLayer.TEXT, damageText);

@@ -32,6 +32,7 @@ public class TextObject extends GameObject {
     @Override
     public void draw(Canvas canvas) {
         if (!isValid) return;
+        paint.setTextAlign(Paint.Align.CENTER);
         canvas.drawText(text, position.x, position.y, paint);
     }
 

@@ -11,6 +11,7 @@ import com.laivy.the.shape.framework.GameObject;
 import com.laivy.the.shape.framework.Metrics;
 import com.laivy.the.shape.game.GameScene;
 import com.laivy.the.shape.game.object.ui.HPBar;
+import com.laivy.the.shape.game.object.ui.RewardUI;
 
 public class Player extends GameObject {
     private final float MAX_ROTATE_DEGREE = 180.0f;
@@ -101,6 +102,11 @@ public class Player extends GameObject {
     public void onLevelUp() {
         exp = 0;
         ++level;
+
+        // 보상 UI 생성, 게임 일시 정지
+        RewardUI rewardUI = new RewardUI(Metrics.width * 0.2f, Metrics.height * 0.8f);
+        GameScene.getInstance().add(GameScene.eLayer.UI, rewardUI);
+        GameScene.getInstance().setRunning(false);
     }
 
     @Override
@@ -255,5 +261,13 @@ public class Player extends GameObject {
 
     public void addExp(int exp) {
         this.exp += exp;
+    }
+
+    public void addDamage(int damage) {
+        this.damage = damage;
+    }
+
+    public int getDamage() {
+        return damage;
     }
 }

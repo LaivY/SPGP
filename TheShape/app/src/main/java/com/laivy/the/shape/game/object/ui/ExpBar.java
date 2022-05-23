@@ -9,13 +9,13 @@ import android.util.Log;
 import com.laivy.the.shape.R;
 import com.laivy.the.shape.framework.GameObject;
 import com.laivy.the.shape.framework.Metrics;
+import com.laivy.the.shape.game.GameScene;
 import com.laivy.the.shape.game.object.Player;
 
 public class ExpBar extends GameObject {
     private final Paint barPaint;
     private final RectF base;
     private final RectF bar;
-    private Player player;
     private float width;
     private int playerExp;
     private float exp;
@@ -28,7 +28,6 @@ public class ExpBar extends GameObject {
         base.offset(Metrics.width / 2.0f, 0.0f);
         bar = new RectF(-width / 2.0f, 0.0f, -width / 2.0f, 30.0f);
         bar.offset(Metrics.width / 2.0f, 0.0f);
-        player = null;
         playerExp = 0;  // 최신 플레이어의 경험치
         exp = 0.0f;     // 그리기를 위한 경험치
         delta = 0.0f;   // exp에 계속해서 더해줘야할 경험치량
@@ -36,7 +35,7 @@ public class ExpBar extends GameObject {
 
     @Override
     public void update(float deltaTime) {
-        if (player == null) return;
+        Player player = GameScene.getInstance().getPlayer();
 
         int currPlayerExp = player.getExp();
         int currPlayerReqExp = player.getReqExp();
@@ -83,11 +82,5 @@ public class ExpBar extends GameObject {
 
         barPaint.setColor(0xFF00b7ee);
         canvas.drawRect(bar, barPaint);
-
-        canvas.drawText("hello, world", 0.0f, 0.0f, paint);
-    }
-
-    public void setPlayer(Player player) {
-        this.player = player;
     }
 }
