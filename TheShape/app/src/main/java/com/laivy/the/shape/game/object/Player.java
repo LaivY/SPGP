@@ -11,13 +11,14 @@ import com.laivy.the.shape.framework.GameObject;
 import com.laivy.the.shape.framework.Metrics;
 import com.laivy.the.shape.game.GameScene;
 import com.laivy.the.shape.game.object.ui.HPBar;
-import com.laivy.the.shape.game.object.ui.RewardUI;
+import com.laivy.the.shape.game.object.ui.Reward;
 
 public class Player extends GameObject {
     private final float MAX_ROTATE_DEGREE = 180.0f;
     private boolean isMove;
     private int maxHp;
     private int hp;
+    private int def;
     private int exp;
     private int[] reqExp;
     private int level;
@@ -42,6 +43,7 @@ public class Player extends GameObject {
         // 플레이어 관련
         maxHp = (int) Metrics.getFloat(R.dimen.PLAYER_HP);
         hp = maxHp;
+        def = 0;
         speed = Metrics.getFloat(R.dimen.PLAYER_SPEED);
         direction = new PointF(0.0f, -1.0f);
         level = 1;
@@ -89,7 +91,7 @@ public class Player extends GameObject {
 
     public void onHit(GameObject object) {
         if (object instanceof Enemy) {
-            hp -= 10;
+            hp -= Math.max(0, 10 - def);
 
             Enemy enemy = (Enemy) object;
             invincibleTime = 0.5f;
@@ -104,8 +106,8 @@ public class Player extends GameObject {
         ++level;
 
         // 보상 UI 생성, 게임 일시 정지
-        RewardUI rewardUI = new RewardUI(Metrics.width * 0.2f, Metrics.height * 0.8f);
-        GameScene.getInstance().add(GameScene.eLayer.UI, rewardUI);
+        Reward reward = new Reward(Metrics.width * 0.2f, Metrics.height * 0.5f);
+        GameScene.getInstance().add(GameScene.eLayer.UI, reward);
         GameScene.getInstance().setRunning(false);
     }
 
@@ -263,8 +265,12 @@ public class Player extends GameObject {
         this.exp += exp;
     }
 
+    public void addDef(int def) {
+        this.def += def;
+    }
+
     public void addDamage(int damage) {
-        this.damage = damage;
+        this.damage += damage;
     }
 
     public int getDamage() {

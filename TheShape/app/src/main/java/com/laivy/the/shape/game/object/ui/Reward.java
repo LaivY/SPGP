@@ -4,6 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.util.Log;
 import android.view.MotionEvent;
 
 import com.laivy.the.shape.framework.GameObject;
@@ -12,7 +13,9 @@ import com.laivy.the.shape.framework.Utility;
 import com.laivy.the.shape.game.GameScene;
 import com.laivy.the.shape.game.object.Player;
 
-public class RewardUI extends GameObject {
+import java.util.Map;
+
+public class Reward extends GameObject {
     /*
     이 객체는 3개의 사각형을 갖고 있고 중복되지 않는 서로 다른 보상을 갖고있다.
     3개의 사각형 중 하나라도 선택됬다면 게임을 진행시키고 이 객체를 삭제한다.
@@ -27,7 +30,7 @@ public class RewardUI extends GameObject {
     private float width;
     private float height;
 
-    public RewardUI(float width, float height) {
+    public Reward(float width, float height) {
         rewards = new eReward[3];
 
         // 중복없이 3개의 보상 선택
@@ -65,25 +68,21 @@ public class RewardUI extends GameObject {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                for (int i = 0; i < 3; ++i) {
-                    if (!rects[i].contains(event.getX(), event.getY())) continue;
+        if (!isValid) return false;
+        if (event.getAction() != MotionEvent.ACTION_DOWN) return false;
 
-                    // 플레이어 스탯 증가
-                    Player player = GameScene.getInstance().getPlayer();
-                    player.addDamage(5);
+        for (int i = 0; i < 3; ++i) {
+            if (!rects[i].contains(event.getX(), event.getY())) continue;
 
-                    // 삭제
-                    GameScene.getInstance().remove(GameScene.eLayer.UI, this);
+            // 플레이어 스탯 증가
+            Player player = GameScene.getInstance().getPlayer();
+            player.addDamage(5);
 
-                    // 게임 재개
-                    GameScene.getInstance().setRunning(true);
-                    break;
-                }
-                return true;
+            GameScene.getInstance().remove(GameScene.eLayer.UI, this);
+            GameScene.getInstance().setRunning(true);
+            break;
         }
-        return false;
+        return true;
     }
 
     @Override
@@ -96,10 +95,29 @@ public class RewardUI extends GameObject {
             paint.setColor(Color.WHITE);
             canvas.drawRect(rects[i], paint);
 
+            String text = "";
+            switch (rewards[i])
+            {
+                case HP:
+                    text = "체력 +10";
+                    break;
+                case DMG:
+                    text = "데미지 +5";
+                    break;
+                case SPEED:
+                    text = "이동속도 +10%";
+                    break;
+                case ATKSPEED:
+                    text = "공격속도 +10%";
+                    break;
+                case KNOCKBACK:
+                    text = "넉백 +10%";
+                    break;
+            }
             paint.setColor(Color.BLACK);
             paint.setTextSize(50);
             paint.setTextAlign(Paint.Align.CENTER);
-            canvas.drawText("데미지 +5", rects[i].centerX(), rects[i].centerY(), paint);
+            canvas.drawText(text, rects[i].centerX(), rects[i].centerY(), paint);
         }
     }
 }
