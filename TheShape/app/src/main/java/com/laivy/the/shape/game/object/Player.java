@@ -11,7 +11,10 @@ import com.laivy.the.shape.framework.GameObject;
 import com.laivy.the.shape.framework.Metrics;
 import com.laivy.the.shape.game.GameScene;
 import com.laivy.the.shape.game.object.ui.HPBar;
+import com.laivy.the.shape.game.object.ui.Relic;
 import com.laivy.the.shape.game.object.ui.Reward;
+
+import java.util.ArrayList;
 
 public class Player extends GameObject {
     private final float MAX_ROTATE_DEGREE = 180.0f;
@@ -35,6 +38,7 @@ public class Player extends GameObject {
     private PointF knockBackDirection;
     private PointF direction;
     private HPBar hpBar;
+    private ArrayList<Relic> relics;
 
     public Player() {
         // 컨트롤러로 조종 중인지
@@ -74,6 +78,9 @@ public class Player extends GameObject {
         
         // 히트박스
         hitBox = new RectF(-20.0f, -20.0f, 20.0f, 20.0f);
+
+        // 유물들
+        relics = new ArrayList<>();
     }
 
     @Override
@@ -237,6 +244,19 @@ public class Player extends GameObject {
         direction.set(x, y);
     }
 
+    public void addRelic(Relic relic) {
+        switch (relic.getId()) {
+            case 0:
+                damage += 3;
+                break;
+        }
+
+        relic.setBitmapWidth(Metrics.width * 0.08f);
+        relic.setBitmapHeight(Metrics.width * 0.08f);
+        relic.setPosition((relic.getBitmapWidth() / 2.0f) + (relics.size() * relic.getBitmapWidth() / 2.0f), relic.getBitmapHeight() / 2.0f);
+        relics.add(relic);
+    }
+
     public int getMaxHp() {
         return maxHp;
     }
@@ -275,5 +295,9 @@ public class Player extends GameObject {
 
     public int getDamage() {
         return damage;
+    }
+
+    public ArrayList<Relic> getRelics() {
+        return relics;
     }
 }

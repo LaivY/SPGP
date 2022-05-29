@@ -4,7 +4,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
-import android.util.Log;
 import android.view.MotionEvent;
 
 import com.laivy.the.shape.framework.GameObject;
@@ -13,44 +12,57 @@ import com.laivy.the.shape.framework.Utility;
 import com.laivy.the.shape.game.GameScene;
 import com.laivy.the.shape.game.object.Player;
 
-import java.util.Map;
-
 public class Reward extends GameObject {
     /*
     이 객체는 3개의 사각형을 갖고 있고 중복되지 않는 서로 다른 보상을 갖고있다.
     3개의 사각형 중 하나라도 선택됬다면 게임을 진행시키고 이 객체를 삭제한다.
     */
     private final float REWARD_UI_INTERVAL = 0.05f;
-    private enum eReward
-    {
-        HP, DMG, SPEED, ATKSPEED, KNOCKBACK
-    }
-    private eReward[] rewards;
+    private Relic[] relics;
     private RectF[] rects;
     private float width;
     private float height;
 
     public Reward(float width, float height) {
-        rewards = new eReward[3];
-
         // 중복없이 3개의 보상 선택
+        int[] relicIds = new int[3];
+        relicIds[0] = -1;
+        relicIds[1] = -1;
+        relicIds[2] = -1;
+
         for (int i = 0; i < 3; ++i) {
             while (true) {
                 boolean pass = true;
-                int rewardIndex = Utility.getRandom(0, eReward.values().length - 1);
+                int rewardIndex = Utility.getRandom(0, 3);
                 for (int j = 0; j < i; ++j) {
-                    if (rewards[j].ordinal() == rewardIndex) {
+                    if (relicIds[j] == rewardIndex) {
                         pass = false;
                         break;
                     }
                 }
                 if (pass) {
-                    rewards[i] = eReward.values()[rewardIndex];
+                    relicIds[i] = rewardIndex;
                     break;
                 }
             }
         }
 
+        // 유물 객체 생성
+        relics = new Relic[3];
+        for (int i = 0; i < 3; ++i) {
+            relics[i] = new Relic(relicIds[i]);
+            relics[i].setBitmapWidth(Metrics.width * 0.1f);
+            relics[i].setBitmapHeight(Metrics.width * 0.1f);
+
+            if (i == 0)
+                relics[i].setPosition(Metrics.width / 2.0f - width - Metrics.width * REWARD_UI_INTERVAL, Metrics.height / 2.0f);
+            else if (i == 1)
+                relics[i].setPosition(Metrics.width / 2.0f, Metrics.height / 2.0f);
+            else
+                relics[i].setPosition(Metrics.width / 2.0f + width + Metrics.width * REWARD_UI_INTERVAL, Metrics.height / 2.0f);
+        }
+
+        // 파라미터로 받는 width, height 는 보상 칸 하나의 가로, 세로 길이
         this.width = width;
         this.height = height;
 
@@ -74,9 +86,9 @@ public class Reward extends GameObject {
         for (int i = 0; i < 3; ++i) {
             if (!rects[i].contains(event.getX(), event.getY())) continue;
 
-            // 플레이어 스탯 증가
+            // 플레이어에게 유물 추가
             Player player = GameScene.getInstance().getPlayer();
-            player.addDamage(5);
+            player.addRelic(relics[i]);
 
             GameScene.getInstance().remove(GameScene.eLayer.UI, this);
             GameScene.getInstance().setRunning(true);
@@ -94,30 +106,21 @@ public class Reward extends GameObject {
         for (int i = 0; i < 3; ++i) {
             paint.setColor(Color.WHITE);
             canvas.drawRect(rects[i], paint);
+            relics[i].draw(canvas);
 
-            String text = "";
-            switch (rewards[i])
-            {
-                case HP:
-                    text = "체력 +10";
-                    break;
-                case DMG:
-                    text = "데미지 +5";
-                    break;
-                case SPEED:
-                    text = "이동속도 +10%";
-                    break;
-                case ATKSPEED:
-                    text = "공격속도 +10%";
-                    break;
-                case KNOCKBACK:
-                    text = "넉백 +10%";
-                    break;
-            }
             paint.setColor(Color.BLACK);
-            paint.setTextSize(50);
+            paint.setTextSize(50.0f);
             paint.setTextAlign(Paint.Align.CENTER);
-            canvas.drawText(text, rects[i].centerX(), rects[i].centerY(), paint);
+
+            float y = rects[i].centerY() + relics[i].getBitmapHeight() / 2.0f;
+
+            String text = relics[i].getName();
+            canvas.drawText(text, rects[i].centerX(), y, paint);
+            y += paint.descent() - paint.ascent();
+
+            paint.setTextSize(30.0f);
+            text = relics[i].getDesc();
+            canvas.drawText(text, rects[i].centerX(), y, paint);
         }
     }
 }

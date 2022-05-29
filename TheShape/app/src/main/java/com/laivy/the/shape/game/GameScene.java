@@ -70,6 +70,8 @@ public class GameScene {
         // UI는 카메라의 영향을 받지 않는다.
         for (GameObject ui : layers.get(eLayer.UI))
             ui.draw(canvas);
+        for (GameObject relic : player.getRelics())
+            relic.draw(canvas);
     }
 
     public void init() {

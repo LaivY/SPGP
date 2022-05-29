@@ -60,6 +60,14 @@ public class GameObject {
         bitmapHeight = bitmap.getHeight();
     }
 
+    public void setBitmapWidth(float width) {
+        bitmapWidth = width;
+    }
+
+    public void setBitmapHeight(float height) {
+        bitmapHeight = height;
+    }
+
     public void setPosition(float x, float y) {
         position.set(x, y);
         if (hitBox != null) {
@@ -86,6 +94,10 @@ public class GameObject {
 
     public RectF getHitBox() {
         return hitBox;
+    }
+
+    public float getBitmapWidth() {
+        return bitmapWidth;
     }
 
     public float getBitmapHeight() {
