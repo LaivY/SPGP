@@ -33,7 +33,7 @@ public class Reward extends GameObject {
         for (int i = 0; i < 3; ++i) {
             while (true) {
                 boolean pass = true;
-                int rewardIndex = Utility.getRandom(0, 3);
+                int rewardIndex = Utility.getRandom(0, 2);
                 for (int j = 0; j < i; ++j) {
                     if (relicIds[j] == rewardIndex) {
                         pass = false;
@@ -109,7 +109,7 @@ public class Reward extends GameObject {
             relics[i].draw(canvas);
 
             paint.setColor(Color.BLACK);
-            paint.setTextSize(50.0f);
+            paint.setTextSize(30.0f);
             paint.setTextAlign(Paint.Align.CENTER);
 
             float y = rects[i].centerY() + relics[i].getBitmapHeight() / 2.0f;
@@ -118,7 +118,7 @@ public class Reward extends GameObject {
             canvas.drawText(text, rects[i].centerX(), y, paint);
             y += paint.descent() - paint.ascent();
 
-            paint.setTextSize(30.0f);
+            paint.setTextSize(20.0f);
             text = relics[i].getDesc();
             canvas.drawText(text, rects[i].centerX(), y, paint);
         }

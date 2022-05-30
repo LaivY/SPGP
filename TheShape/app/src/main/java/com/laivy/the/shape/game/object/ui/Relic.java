@@ -15,10 +15,24 @@ public class Relic extends GameObject {
     public Relic(int id) {
         this.id = id;
         switch (id) {
-            default:
+            case 0:
                 setBitmap(R.mipmap.kettlebell);
                 name = "케틀벨";
-                desc = "공격력 +5\n이동속도 +10%";
+                desc = "공격력 +5";
+                break;
+            case 1:
+                setBitmap(R.mipmap.blood_vial);
+                name = "피가 담긴 병";
+                desc = "적 처치 시 체력 1 회복";
+                break;
+            case 2:
+                setBitmap(R.mipmap.bronze_scales);
+                name = "청동 비늘";
+                desc = "피격 시 해당 적에게 공격력 만큼의 피해를 줌";
+                break;
+            default:
+                name = "이름";
+                desc = "설명";
                 break;
         }
         super.update(0.0f);
