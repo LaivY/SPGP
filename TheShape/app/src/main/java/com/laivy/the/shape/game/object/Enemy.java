@@ -56,7 +56,6 @@ public class Enemy extends GameObject {
             GameScene.getInstance().add(GameScene.eLayer.TEXT, damageText);
         }
         else if (object instanceof Player) {
-            //Player player = (Player) object;
             knockBackDuration = 0.5f;
             knockBackPower = 500.0f;
 
