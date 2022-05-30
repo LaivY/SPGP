@@ -1,6 +1,7 @@
 package com.laivy.the.shape.game.object;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.view.MotionEvent;
@@ -13,6 +14,7 @@ import com.laivy.the.shape.game.GameScene;
 import com.laivy.the.shape.game.object.ui.HPBar;
 import com.laivy.the.shape.game.object.ui.Relic;
 import com.laivy.the.shape.game.object.ui.Reward;
+import com.laivy.the.shape.game.object.ui.TextObject;
 
 import java.util.ArrayList;
 
@@ -98,18 +100,17 @@ public class Player extends GameObject {
 
     public void onHit(GameObject object) {
         if (object instanceof Enemy) {
-            hp -= Math.max(0, 10 - def);
-
+            // 넉백, 무적, 체력 감소
             Enemy enemy = (Enemy) object;
-            invincibleTime = 0.5f;
+            knockBackDirection = enemy.getDirection();
             knockBackDuration = 0.5f;
             knockBackPower = 100.0f;
-            knockBackDirection = enemy.getDirection();
-            
-            for (Relic r : relics) {
-                if (r.getId() == 2)
-                    enemy.onHit(r);
-            }
+            invincibleTime = 0.5f;
+            addHp(-enemy.getDamage() + def);
+
+            // 유물 효과
+            for (Relic r : relics)
+                enemy.onHit(r);
         }
     }
 
@@ -249,6 +250,21 @@ public class Player extends GameObject {
         direction.set(x, y);
     }
 
+    public void addHp(int value) {
+        hp = Math.max(0, Math.min(maxHp, hp + value));
+
+        TextObject textObject = new TextObject();
+        if (value < 0)
+            textObject.setColor(Color.RED);
+        else
+            textObject.setColor(Color.GREEN);
+        textObject.setTextSize(40.0f);
+        textObject.setText(Integer.toString(Math.abs(value)));
+        textObject.setLifeTime(0.5f);
+        textObject.setPosition(position.x, position.y - getBitmapHeight());
+        GameScene.getInstance().add(GameScene.eLayer.TEXT, textObject);
+    }
+
     public void addRelic(Relic relic) {
         switch (relic.getId()) {
             case 0:
@@ -260,6 +276,17 @@ public class Player extends GameObject {
         relic.setBitmapHeight(Metrics.width * 0.08f);
         relic.setPosition((relic.getBitmapWidth() / 2.0f) + (relics.size() * relic.getBitmapWidth() / 2.0f), relic.getBitmapHeight() / 2.0f);
         relics.add(relic);
+
+        GameScene.getInstance().add(GameScene.eLayer.UI, relic);
+    }
+
+
+    public boolean hasRelic(int relicId) {
+        for (Relic r : relics) {
+            if (r.getId() == relicId)
+                return true;
+        }
+        return false;
     }
 
     public int getMaxHp() {

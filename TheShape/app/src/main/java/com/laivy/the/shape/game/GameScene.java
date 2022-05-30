@@ -11,6 +11,7 @@ import com.laivy.the.shape.game.object.ui.Controller;
 import com.laivy.the.shape.game.object.system.EnemyGenerator;
 import com.laivy.the.shape.game.object.ui.ExpBar;
 import com.laivy.the.shape.game.object.Player;
+import com.laivy.the.shape.game.object.ui.PlayTimer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,12 +25,14 @@ public class GameScene {
     private Map<eLayer, ArrayList<GameObject>> layers;
     private Player player;
     private Camera camera;
+    private float playTime;
     private boolean isRunning;
 
     private GameScene() {
         instance = null;
         player = null;
         camera = null;
+        playTime = 0.0f;
         isRunning = true;
     }
 
@@ -49,11 +52,13 @@ public class GameScene {
 
     public void update(float deltaTime) {
         if (!isRunning) return;
+        playTime += deltaTime;
 
         camera.update(deltaTime);
         for (eLayer key : eLayer.values())
             for (GameObject o : layers.get(key))
                 o.update(deltaTime);
+
     }
 
     public void draw(Canvas canvas) {
@@ -70,8 +75,6 @@ public class GameScene {
         // UI는 카메라의 영향을 받지 않는다.
         for (GameObject ui : layers.get(eLayer.UI))
             ui.draw(canvas);
-        for (GameObject relic : player.getRelics())
-            relic.draw(canvas);
     }
 
     public void init() {
@@ -106,6 +109,10 @@ public class GameScene {
         // 경험치바
         ExpBar expBar = new ExpBar();
         layers.get(eLayer.UI).add(expBar);
+
+        // 타이머
+        PlayTimer playTimer = new PlayTimer();
+        layers.get(eLayer.UI).add(playTimer);
 
         // 충돌체커
         CollisionChecker checker = new CollisionChecker();

@@ -38,13 +38,22 @@ public class Enemy extends GameObject {
     public void onHit(GameObject object) {
         if (object instanceof Bullet) {
             Bullet bullet = (Bullet) object;
-            hp -= bullet.getDmg();
+            hp -= bullet.getDamage();
             knockBackDuration = 0.5f;
             knockBackPower = 300.0f;
 
             PointF bulletDirection = bullet.getDirection();
             knockBackDirection.x = bulletDirection.x;
             knockBackDirection.y = bulletDirection.y;
+
+            // 데미지 표기
+            TextObject damageText = new TextObject();
+            damageText.setColor(Color.WHITE);
+            damageText.setTextSize(40.0f);
+            damageText.setText(Integer.toString(bullet.getDamage()));
+            damageText.setLifeTime(0.5f);
+            damageText.setPosition(position.x, position.y - getBitmapHeight());
+            GameScene.getInstance().add(GameScene.eLayer.TEXT, damageText);
         }
         else if (object instanceof Player) {
             //Player player = (Player) object;
@@ -77,6 +86,12 @@ public class Enemy extends GameObject {
         exp.setBitmap(R.mipmap.exp);
         exp.setPosition(position.x, position.y);
         GameScene.getInstance().add(GameScene.eLayer.EXP, exp);
+
+        // 피가 담긴 병
+        Player player = GameScene.getInstance().getPlayer();
+        if (player.hasRelic(1)) {
+            player.addHp(1);
+        }
     }
 
     @Override

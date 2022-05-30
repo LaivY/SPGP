@@ -18,7 +18,7 @@ public class Relic extends GameObject {
             case 0:
                 setBitmap(R.mipmap.kettlebell);
                 name = "케틀벨";
-                desc = "공격력 +5";
+                desc = "공격력 +3";
                 break;
             case 1:
                 setBitmap(R.mipmap.blood_vial);

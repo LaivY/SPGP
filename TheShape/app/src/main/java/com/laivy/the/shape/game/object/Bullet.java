@@ -8,14 +8,14 @@ import com.laivy.the.shape.framework.GameObject;
 import com.laivy.the.shape.game.GameScene;
 
 public class Bullet extends GameObject {
-    private int dmg;
+    private int damage;
     private float lifeTime;
     private float degree;
     private float speed;
     private PointF direction;
 
     public Bullet() {
-        dmg = 1;
+        damage = 1;
         lifeTime = 1.0f;
         degree = 0.0f;
         speed = 2000.0f;
@@ -55,7 +55,7 @@ public class Bullet extends GameObject {
     }
 
     public void setDamage(int damage) {
-        dmg = damage;
+        this.damage = damage;
     }
 
     public void setDirection(float x, float y) {
@@ -70,8 +70,8 @@ public class Bullet extends GameObject {
         matrix.mapRect(hitBox);
     }
 
-    int getDmg() {
-        return dmg;
+    int getDamage() {
+        return damage;
     }
 
     PointF getDirection() {
