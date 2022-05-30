@@ -34,7 +34,6 @@ public class EnemyGenerator extends GameObject {
             PointF playerPosition = player.getPosition();
 
             Enemy enemy = new Enemy();
-            enemy.setPlayer(player);
             enemy.setBitmap(type == 0 ? R.mipmap.rect : R.mipmap.circle);
             enemy.setPosition(playerPosition.x + x, playerPosition.y + y);
             GameScene.getInstance().add(GameScene.eLayer.ENEMY, enemy);

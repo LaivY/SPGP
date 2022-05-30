@@ -105,6 +105,11 @@ public class Player extends GameObject {
             knockBackDuration = 0.5f;
             knockBackPower = 100.0f;
             knockBackDirection = enemy.getDirection();
+            
+            for (Relic r : relics) {
+                if (r.getId() == 2)
+                    enemy.onHit(r);
+            }
         }
     }
 

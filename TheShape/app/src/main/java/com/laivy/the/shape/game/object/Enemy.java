@@ -1,15 +1,19 @@
 package com.laivy.the.shape.game.object;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.PointF;
 import android.graphics.RectF;
 
 import com.laivy.the.shape.R;
 import com.laivy.the.shape.framework.GameObject;
 import com.laivy.the.shape.game.GameScene;
+import com.laivy.the.shape.game.object.ui.Relic;
+import com.laivy.the.shape.game.object.ui.TextObject;
 
 public class Enemy extends GameObject {
     private int hp;
+    private int damage;
     private float speed;
     private float rotate;
     private float knockBackDuration;
@@ -17,10 +21,10 @@ public class Enemy extends GameObject {
     private float knockBackPower;
     private PointF knockBackDirection;
     private PointF direction;
-    private Player player;
 
     public Enemy() {
         hp = 10;
+        damage = 10;
         speed = 80.0f;
         rotate = 0.0f;
         knockBackDuration = 0.0f;
@@ -28,7 +32,6 @@ public class Enemy extends GameObject {
         knockBackPower = 0.0f;
         knockBackDirection = new PointF();
         direction = new PointF();
-        player = null;
         hitBox = new RectF(-30.0f, -30.0f, 30.0f, 30.0f);
     }
 
@@ -51,6 +54,22 @@ public class Enemy extends GameObject {
             knockBackDirection.x = -direction.x;
             knockBackDirection.y = -direction.y;
         }
+        else if (object instanceof Relic) {
+            Relic relic = (Relic) object;
+            switch (relic.getId())
+            {
+                case 2:
+                    hp -= GameScene.getInstance().getPlayer().getDamage();
+                    TextObject damageText = new TextObject();
+                    damageText.setColor(Color.WHITE);
+                    damageText.setTextSize(40.0f);
+                    damageText.setText(Integer.toString(GameScene.getInstance().getPlayer().getDamage()));
+                    damageText.setLifeTime(0.5f);
+                    damageText.setPosition(position.x, position.y - getBitmapHeight());
+                    GameScene.getInstance().add(GameScene.eLayer.TEXT, damageText);
+                    break;
+            }
+        }
     }
 
     public void onDestroy() {
@@ -62,7 +81,7 @@ public class Enemy extends GameObject {
 
     @Override
     public void update(float deltaTime) {
-        if (!isValid || player == null) return;
+        if (!isValid) return;
 
         // 체력이 0이하라면 삭제
         if (hp <= 0) {
@@ -92,7 +111,7 @@ public class Enemy extends GameObject {
         }
         else {
             // 플레이어를 쫓아다니도록 설정
-            PointF playerPosition = player.getPosition();
+            PointF playerPosition = GameScene.getInstance().getPlayer().getPosition();
             float dx = playerPosition.x - position.x;
             float dy = playerPosition.y - position.y;
             float length = (float) Math.sqrt(dx * dx + dy * dy);
@@ -125,8 +144,8 @@ public class Enemy extends GameObject {
         this.hp = hp;
     }
 
-    public void setPlayer(Player player) {
-        this.player = player;
+    public int getDamage() {
+        return damage;
     }
 
     public PointF getDirection() {
