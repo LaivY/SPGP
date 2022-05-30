@@ -12,17 +12,14 @@ import com.laivy.the.shape.game.object.Player;
 public class EnemyGenerator extends GameObject {
     private float spawnTime;
     private float timer;
-    private float playTime;
 
     public EnemyGenerator() {
         spawnTime = 3.0f;
         timer = 3.0f;
-        playTime = 0.0f;
     }
 
     @Override
     public void update(float deltaTime) {
-        Player player = GameScene.getInstance().getPlayer();
 
         if (timer > spawnTime) {
             int type = Utility.getRandom(0, 1);
@@ -31,6 +28,7 @@ public class EnemyGenerator extends GameObject {
             float x = Utility.getRandom(100.0f, 500.0f) * xSign;
             float y = Utility.getRandom(100.0f, 500.0f) * ySign;
 
+            Player player = GameScene.getInstance().getPlayer();
             PointF playerPosition = player.getPosition();
 
             Enemy enemy = new Enemy();
@@ -43,6 +41,5 @@ public class EnemyGenerator extends GameObject {
         }
 
         timer += deltaTime;
-        playTime = deltaTime;
     }
 }

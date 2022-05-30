@@ -58,7 +58,6 @@ public class GameScene {
         for (eLayer key : eLayer.values())
             for (GameObject o : layers.get(key))
                 o.update(deltaTime);
-
     }
 
     public void draw(Canvas canvas) {
@@ -142,5 +141,9 @@ public class GameScene {
 
     public Player getPlayer() {
         return player;
+    }
+
+    public float getPlayTime() {
+        return playTime;
     }
 }

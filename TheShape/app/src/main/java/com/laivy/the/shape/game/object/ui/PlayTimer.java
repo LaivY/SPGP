@@ -6,23 +6,19 @@ import android.graphics.Paint;
 
 import com.laivy.the.shape.framework.GameObject;
 import com.laivy.the.shape.framework.Metrics;
+import com.laivy.the.shape.game.GameScene;
 
 public class PlayTimer extends GameObject {
-    float timer;
-
-    public PlayTimer() {
-        timer = 0.0f;
-    }
+    public PlayTimer() { }
 
     @Override
-    public void update(float deltaTime) {
-        timer += deltaTime;
-    }
+    public void update(float deltaTime) { }
 
     @Override
     public void draw(Canvas canvas) {
-        int min = (int) (timer / 60);
-        int sec = (int) (timer % 60);
+        float playTime = GameScene.getInstance().getPlayTime();
+        int min = (int) (playTime / 60);
+        int sec = (int) (playTime % 60);
         String text = "";
         if (min < 10)
             text += "0";
