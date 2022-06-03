@@ -12,6 +12,7 @@ import com.laivy.the.shape.game.object.system.EnemyGenerator;
 import com.laivy.the.shape.game.object.ui.ExpBar;
 import com.laivy.the.shape.game.object.Player;
 import com.laivy.the.shape.game.object.ui.PlayTimer;
+import com.laivy.the.shape.game.object.ui.Result;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,6 +27,7 @@ public class GameScene {
     private Player player;
     private Camera camera;
     private float playTime;
+    private float gameOverDelay;
     private boolean isRunning;
     private boolean isGameOver;
 
@@ -34,6 +36,7 @@ public class GameScene {
         player = null;
         camera = null;
         playTime = 0.0f;
+        gameOverDelay = 1.0f;
         isRunning = true;
         isGameOver = false;
     }
@@ -54,8 +57,17 @@ public class GameScene {
 
     public void update(float deltaTime) {
         if (!isRunning) return;
-        if (!isGameOver)
+        if (player.getHp() > 0)
             playTime += deltaTime;
+        else {
+            gameOverDelay -= deltaTime;
+            if (gameOverDelay <= 0) {
+                Result result = new Result();
+                GameScene.getInstance().add(GameScene.eLayer.UI, result);
+                isGameOver = true;
+                isRunning = false;
+            }
+        }
 
         camera.update(deltaTime);
         for (eLayer key : eLayer.values())
@@ -80,6 +92,12 @@ public class GameScene {
     }
 
     public void init() {
+        // 수치 초기화
+        playTime = 0.0f;
+        gameOverDelay = 1.0f;
+        isRunning = true;
+        isGameOver = false;
+
         // 레이어 초기화
         layers = new HashMap<>();
         for (eLayer layer : eLayer.values())
@@ -153,5 +171,9 @@ public class GameScene {
 
     public float getPlayTime() {
         return playTime;
+    }
+
+    public boolean getGameOver() {
+        return isGameOver;
     }
 }

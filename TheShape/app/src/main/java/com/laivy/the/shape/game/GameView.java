@@ -1,5 +1,6 @@
 package com.laivy.the.shape.game;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
@@ -9,6 +10,7 @@ import android.view.View;
 
 import androidx.annotation.Nullable;
 
+import com.laivy.the.shape.R;
 import com.laivy.the.shape.framework.Metrics;
 
 public class GameView extends View implements Choreographer.FrameCallback {
@@ -42,6 +44,13 @@ public class GameView extends View implements Choreographer.FrameCallback {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        // 게임오버 시 메인화면으로
+        if (GameScene.getInstance().getGameOver() && event.getAction() == MotionEvent.ACTION_DOWN) {
+            isRunning = false;
+            Activity activity = (Activity) view.getContext();
+            activity.setContentView(R.layout.activity_main);
+            return true;
+        }
         return GameScene.getInstance().onTouchEvent(event);
     }
 

@@ -5,5 +5,6 @@
     <dimen name="PLAYER_SPEED">300</dimen>
     <dimen name="EXPBAR_WIDTH">1000</dimen>
     <dimen name="HPBAR_WIDTH">100</dimen>
+    <dimen name="HPBAR_HEIGHT">10</dimen>
     <item name="PLAYER_FIRE_SPEED" type="dimen" format="float">0.2</item>
 </resources>

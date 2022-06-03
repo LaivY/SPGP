@@ -19,8 +19,10 @@ public class Result extends GameObject {
         height = 400.0f;
         dstRect.set(-width / 2.0f, -height / 2.0f, width / 2.0f, height / 2.0f);
         dstRect.offset(Metrics.width / 2.0f, Metrics.height / 2.0f);
-        outlineRect = new RectF(-width * 1.05f / 2.0f, -height * 1.05f / 2.0f,
-                                width * 1.05f / 2.0f, height * 1.05f / 2.0f);
+
+        float outlineThick = 10.0f;
+        outlineRect = new RectF(-width / 2.0f - outlineThick, -height / 2.0f - outlineThick,
+                                width / 2.0f + outlineThick, height / 2.0f + outlineThick);
         outlineRect.offset(Metrics.width / 2.0f, Metrics.height / 2.0f);
     }
 
@@ -31,7 +33,7 @@ public class Result extends GameObject {
     public void draw(Canvas canvas) {
         if (!isValid) return;
 
-        paint.setColor(Color.BLACK);
+        paint.setColor(0xFF2A9DF4);
         canvas.drawRect(outlineRect, paint);
 
         paint.setAlpha(100);

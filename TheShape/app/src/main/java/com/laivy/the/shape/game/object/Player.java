@@ -102,10 +102,6 @@ public class Player extends GameObject {
         sprite.setBitmapHeight(sprite.getBitmapHeight() * 2.0f);
         sprite.setPosition(position.x, position.y);
         GameScene.getInstance().add(GameScene.eLayer.SPRITE, sprite);
-
-        Result result = new Result();
-        GameScene.getInstance().add(GameScene.eLayer.UI, result);
-        GameScene.getInstance().setGameOver(true);
     }
 
     @Override
@@ -279,7 +275,11 @@ public class Player extends GameObject {
 
     public void addHp(int value) {
         hp = Math.max(0, Math.min(maxHp, hp + value));
-        if (hp == 0) GameScene.getInstance().remove(GameScene.eLayer.PLAYER, this);
+        if (hp == 0) {
+            // 게임씬에서 계속해서 플레이어에 접근할 수 있도록 실제 객체를 지우지는 않음
+            isValid = false;
+            onDestroy();
+        }
 
         // 데미지 표기
         TextObject textObject = new TextObject();

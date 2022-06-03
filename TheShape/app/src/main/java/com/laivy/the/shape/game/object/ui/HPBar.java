@@ -16,6 +16,7 @@ public class HPBar extends GameObject {
     private final RectF base;
     private final RectF bar;
     private final float width;
+    private final float height;
     private float value;
     private float maxValue;
     private float heightOffset;
@@ -25,6 +26,7 @@ public class HPBar extends GameObject {
         base = new RectF();
         bar = new RectF();
         width = Metrics.getFloat(R.dimen.HPBAR_WIDTH);
+        height = Metrics.getFloat(R.dimen.HPBAR_HEIGHT);
         value = 0.0f;
         maxValue = 0.0f;
         heightOffset = 0.0f;
@@ -35,9 +37,9 @@ public class HPBar extends GameObject {
         float div = Math.min(1.0f, Math.max(0.0f, value / maxValue));
 
         // 위치, 길이 업데이트
-        base.set(-width / 2.0f, 0.0f, width / 2.0f, 10.0f);
+        base.set(-width / 2.0f, -height / 2.0f, width / 2.0f, height / 2.0f);
         base.offset(position.x, position.y + heightOffset);
-        bar.set(-width / 2.0f, 0.0f, -width / 2.0f + width * div, 10.0f);
+        bar.set(-width / 2.0f, -height / 2.0f, -width / 2.0f + width * div, height / 2.0f);
         bar.offset(position.x, position.y + heightOffset);
         super.update(deltaTime);
     }

@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 
 import com.laivy.the.shape.framework.BitmapPool;
 import com.laivy.the.shape.framework.GameObject;
+import com.laivy.the.shape.game.GameScene;
 
 import java.util.ArrayList;
 
@@ -28,7 +29,7 @@ public class Sprite extends GameObject {
         int frame = (int) (timer / interval);
         if (frame >= images.size()) {
             if (onlyOnce) {
-                isValid = false;
+                GameScene.getInstance().remove(GameScene.eLayer.SPRITE, this);
                 return;
             }
             timer = 0.0f;
