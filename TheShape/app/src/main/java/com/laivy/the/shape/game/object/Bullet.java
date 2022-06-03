@@ -4,6 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.PointF;
 import android.graphics.RectF;
 
+import com.laivy.the.shape.R;
 import com.laivy.the.shape.framework.GameObject;
 import com.laivy.the.shape.game.GameScene;
 
@@ -21,6 +22,20 @@ public class Bullet extends GameObject {
         speed = 2000.0f;
         direction = new PointF();
         hitBox = new RectF(-5.0f, -50.0f, 5.0f, 50.0f);
+    }
+
+    @Override
+    public void onDestroy() {
+        Sprite sprite = new Sprite();
+        sprite.addImage(R.mipmap.explosition0);
+        sprite.addImage(R.mipmap.explosition1);
+        sprite.addImage(R.mipmap.explosition2);
+        sprite.addImage(R.mipmap.explosition3);
+        sprite.addImage(R.mipmap.explosition4);
+        sprite.addImage(R.mipmap.explosition5);
+        sprite.setOnlyOnce(true);
+        sprite.setPosition(position.x, position.y);
+        GameScene.getInstance().add(GameScene.eLayer.SPRITE, sprite);
     }
 
     @Override

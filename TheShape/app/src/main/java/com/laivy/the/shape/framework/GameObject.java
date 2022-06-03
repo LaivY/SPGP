@@ -35,6 +35,8 @@ public class GameObject {
         position = new PointF();
     }
 
+    public void onDestroy() { }
+
     public boolean onTouchEvent(MotionEvent event) {
         return false;
     }

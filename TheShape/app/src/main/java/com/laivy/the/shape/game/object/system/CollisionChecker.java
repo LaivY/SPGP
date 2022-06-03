@@ -44,27 +44,10 @@ public class CollisionChecker extends GameObject {
             // 적과 총알 간의 충돌 처리
             for (GameObject o2 : bullets) {
                 if (!o2.getIsValid()) continue;
-
                 Bullet bullet = (Bullet) o2;
                 if (isCollided(enemy.getHitBox(), bullet.getHitBox())) {
-                    // 총알 위치에 폭발 이펙트 추가
-                    PointF bulletPosition = bullet.getPosition();
-                    Sprite sprite = new Sprite();
-                    sprite.addImage(R.mipmap.explosition0);
-                    sprite.addImage(R.mipmap.explosition1);
-                    sprite.addImage(R.mipmap.explosition2);
-                    sprite.addImage(R.mipmap.explosition3);
-                    sprite.addImage(R.mipmap.explosition4);
-                    sprite.addImage(R.mipmap.explosition5);
-                    sprite.setOnlyOnce(true);
-                    sprite.setPosition(bulletPosition.x, bulletPosition.y);
-                    GameScene.getInstance().add(GameScene.eLayer.SPRITE, sprite);
-
-                    // 총알 삭제
-                    GameScene.getInstance().remove(GameScene.eLayer.BULLET, bullet);
-
-                    // 적에게 피격당했다는 것을 알려줌
                     enemy.onHit(bullet);
+                    GameScene.getInstance().remove(GameScene.eLayer.BULLET, bullet);
                 }
             }
         }
@@ -78,8 +61,8 @@ public class CollisionChecker extends GameObject {
             if (!o.getIsValid()) continue;
             Exp exp = (Exp) o;
             if (isCollided(player.getHitBox(), exp.getHitBox())) {
+                player.addExp(exp.getExp());
                 GameScene.getInstance().remove(GameScene.eLayer.EXP, exp);
-                player.addExp(1);
             }
         }
     }

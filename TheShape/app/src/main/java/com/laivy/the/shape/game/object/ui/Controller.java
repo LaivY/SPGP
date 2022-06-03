@@ -22,6 +22,9 @@ public class Controller extends GameObject {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        if (GameScene.getInstance().getPlayer().getHp() == 0)
+            return false;
+
         switch (event.getAction()) {
             case MotionEvent.ACTION_UP:
                 isActive = false;

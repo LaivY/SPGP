@@ -27,6 +27,7 @@ public class GameScene {
     private Camera camera;
     private float playTime;
     private boolean isRunning;
+    private boolean isGameOver;
 
     private GameScene() {
         instance = null;
@@ -34,6 +35,7 @@ public class GameScene {
         camera = null;
         playTime = 0.0f;
         isRunning = true;
+        isGameOver = false;
     }
 
     public static GameScene getInstance() {
@@ -52,7 +54,8 @@ public class GameScene {
 
     public void update(float deltaTime) {
         if (!isRunning) return;
-        playTime += deltaTime;
+        if (!isGameOver)
+            playTime += deltaTime;
 
         camera.update(deltaTime);
         for (eLayer key : eLayer.values())
@@ -127,12 +130,17 @@ public class GameScene {
     }
 
     public void remove(eLayer layer, GameObject gameObject) {
+        gameObject.onDestroy();
         gameObject.setIsValid(false);
         GameView.view.post(() -> layers.get(layer).add(gameObject));
     }
 
     public void setRunning(boolean running) {
         isRunning = running;
+    }
+
+    public void setGameOver(boolean gameOver) {
+        isGameOver = gameOver;
     }
 
     public ArrayList<GameObject> getLayer(eLayer layer) {

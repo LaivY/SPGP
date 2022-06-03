@@ -4,6 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PointF;
 import android.graphics.RectF;
+import android.util.Log;
 import android.view.MotionEvent;
 
 import com.laivy.the.shape.R;
@@ -13,6 +14,7 @@ import com.laivy.the.shape.framework.Metrics;
 import com.laivy.the.shape.game.GameScene;
 import com.laivy.the.shape.game.object.ui.HPBar;
 import com.laivy.the.shape.game.object.ui.Relic;
+import com.laivy.the.shape.game.object.ui.Result;
 import com.laivy.the.shape.game.object.ui.Reward;
 import com.laivy.the.shape.game.object.ui.TextObject;
 
@@ -47,7 +49,8 @@ public class Player extends GameObject {
         isMove = false;
 
         // 플레이어 관련
-        maxHp = (int) Metrics.getFloat(R.dimen.PLAYER_HP);
+        //maxHp = (int) Metrics.getFloat(R.dimen.PLAYER_HP);
+        maxHp = (int) 10;
         hp = maxHp;
         def = 0;
         speed = Metrics.getFloat(R.dimen.PLAYER_SPEED);
@@ -83,6 +86,26 @@ public class Player extends GameObject {
 
         // 유물들
         relics = new ArrayList<>();
+    }
+
+    @Override
+    public void onDestroy() {
+        Sprite sprite = new Sprite();
+        sprite.addImage(R.mipmap.explosition0);
+        sprite.addImage(R.mipmap.explosition1);
+        sprite.addImage(R.mipmap.explosition2);
+        sprite.addImage(R.mipmap.explosition3);
+        sprite.addImage(R.mipmap.explosition4);
+        sprite.addImage(R.mipmap.explosition5);
+        sprite.setOnlyOnce(true);
+        sprite.setBitmapWidth(sprite.getBitmapWidth() * 2.0f);
+        sprite.setBitmapHeight(sprite.getBitmapHeight() * 2.0f);
+        sprite.setPosition(position.x, position.y);
+        GameScene.getInstance().add(GameScene.eLayer.SPRITE, sprite);
+
+        Result result = new Result();
+        GameScene.getInstance().add(GameScene.eLayer.UI, result);
+        GameScene.getInstance().setGameOver(true);
     }
 
     @Override
@@ -126,6 +149,8 @@ public class Player extends GameObject {
 
     @Override
     public void update(float deltaTime) {
+        if (!isValid) return;
+
         // 피격 시 넉백
         if (knockBackDuration != 0.0f) {
             float delta = (float) (knockBackPower * Math.cos(knockBackTimer * Math.PI / 2.0f / knockBackDuration));
@@ -205,6 +230,8 @@ public class Player extends GameObject {
 
     @Override
     public void draw(Canvas canvas) {
+        if (!isValid) return;
+
         canvas.save();
         canvas.rotate(currRotateDegree, position.x, position.y);
         canvas.drawBitmap(bitmap, null, dstRect, null);
@@ -252,7 +279,9 @@ public class Player extends GameObject {
 
     public void addHp(int value) {
         hp = Math.max(0, Math.min(maxHp, hp + value));
+        if (hp == 0) GameScene.getInstance().remove(GameScene.eLayer.PLAYER, this);
 
+        // 데미지 표기
         TextObject textObject = new TextObject();
         if (value < 0)
             textObject.setColor(Color.RED);

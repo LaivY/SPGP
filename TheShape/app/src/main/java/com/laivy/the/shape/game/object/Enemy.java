@@ -79,8 +79,14 @@ public class Enemy extends GameObject {
                     break;
             }
         }
+
+        // 체력이 0이하라면 삭제
+        if (hp <= 0) {
+            GameScene.getInstance().remove(GameScene.eLayer.ENEMY, this);
+        }
     }
 
+    @Override
     public void onDestroy() {
         Exp exp = new Exp();
         exp.setBitmap(R.mipmap.exp);
@@ -97,13 +103,6 @@ public class Enemy extends GameObject {
     @Override
     public void update(float deltaTime) {
         if (!isValid) return;
-
-        // 체력이 0이하라면 삭제
-        if (hp <= 0) {
-            onDestroy();
-            GameScene.getInstance().remove(GameScene.eLayer.ENEMY, this);
-            return;
-        }
 
         // 넉백
         if (knockBackDuration != 0.0f) {
@@ -157,6 +156,10 @@ public class Enemy extends GameObject {
 
     public void setHp(int hp) {
         this.hp = hp;
+    }
+
+    public void setDamage(int damage) {
+        this.damage = damage;
     }
 
     public int getDamage() {
