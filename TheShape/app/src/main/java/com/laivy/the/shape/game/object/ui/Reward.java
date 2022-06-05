@@ -12,6 +12,8 @@ import com.laivy.the.shape.framework.Utility;
 import com.laivy.the.shape.game.GameScene;
 import com.laivy.the.shape.game.object.Player;
 
+import java.util.ArrayList;
+
 public class Reward extends GameObject {
     /*
     이 객체는 3개의 사각형을 갖고 있고 중복되지 않는 서로 다른 보상을 갖고있다.
@@ -30,18 +32,32 @@ public class Reward extends GameObject {
         relicIds[1] = -1;
         relicIds[2] = -1;
 
+        // 플레이어가 보유중인 유물
+        ArrayList<Relic> playerRelics = GameScene.getInstance().getPlayer().getRelics();
+
         for (int i = 0; i < 3; ++i) {
             while (true) {
                 boolean pass = true;
-                int rewardIndex = Utility.getRandom(0, 2);
+                int rewardRelicId = Utility.getRandom(0, Relic.RELIC_COUNT - 1);
+
+                // 보상 목록에 있다면 다시 선택함
                 for (int j = 0; j < i; ++j) {
-                    if (relicIds[j] == rewardIndex) {
+                    if (relicIds[j] == rewardRelicId) {
                         pass = false;
                         break;
                     }
                 }
+
+                // 이미 보유하고 있다면 다시 선택함
+                for (Relic r : playerRelics) {
+                    if (r.getId() == rewardRelicId) {
+                        pass = false;
+                        break;
+                    }
+                }
+
                 if (pass) {
-                    relicIds[i] = rewardIndex;
+                    relicIds[i] = rewardRelicId;
                     break;
                 }
             }

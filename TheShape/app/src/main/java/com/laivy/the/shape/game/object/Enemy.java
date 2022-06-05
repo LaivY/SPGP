@@ -6,6 +6,7 @@ import android.graphics.PointF;
 import android.graphics.RectF;
 
 import com.laivy.the.shape.R;
+import com.laivy.the.shape.framework.Audio;
 import com.laivy.the.shape.framework.GameObject;
 import com.laivy.the.shape.game.GameScene;
 import com.laivy.the.shape.game.object.ui.Relic;
@@ -54,6 +55,9 @@ public class Enemy extends GameObject {
             damageText.setLifeTime(0.5f);
             damageText.setPosition(position.x, position.y - getBitmapHeight());
             GameScene.getInstance().add(GameScene.eLayer.TEXT, damageText);
+
+            // 효과음 출력
+            Audio.playSound(R.raw.hit);
         }
         else if (object instanceof Player) {
             knockBackDuration = 0.5f;
@@ -92,10 +96,18 @@ public class Enemy extends GameObject {
         exp.setPosition(position.x, position.y);
         GameScene.getInstance().add(GameScene.eLayer.EXP, exp);
 
+        // 효과음
+        Audio.playSound(R.raw.enemy);
+
         // 피가 담긴 병
         Player player = GameScene.getInstance().getPlayer();
-        if (player.hasRelic(1)) {
+        if (player.hasRelic(Relic.BLOOD_VIAL)) {
             player.addHp(1);
+        }
+
+        // 고기덩어리
+        if (player.hasRelic(Relic.MEAT) && player.getHp() <= player.getMaxHp() / 2.0f) {
+            player.addHp(3);
         }
     }
 
@@ -159,6 +171,10 @@ public class Enemy extends GameObject {
 
     public void setDamage(int damage) {
         this.damage = damage;
+    }
+
+    public void setSpeed(float speed) {
+        this.speed = speed;
     }
 
     public int getDamage() {

@@ -12,6 +12,7 @@ import com.laivy.the.shape.game.object.Enemy;
 import com.laivy.the.shape.game.object.Exp;
 import com.laivy.the.shape.game.object.Player;
 import com.laivy.the.shape.game.object.Sprite;
+import com.laivy.the.shape.game.object.ui.Relic;
 import com.laivy.the.shape.game.object.ui.TextObject;
 
 import java.util.ArrayList;

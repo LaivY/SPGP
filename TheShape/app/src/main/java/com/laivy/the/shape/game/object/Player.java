@@ -4,17 +4,17 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PointF;
 import android.graphics.RectF;
-import android.util.Log;
 import android.view.MotionEvent;
 
 import com.laivy.the.shape.R;
+import com.laivy.the.shape.framework.Audio;
 import com.laivy.the.shape.framework.BitmapPool;
 import com.laivy.the.shape.framework.GameObject;
 import com.laivy.the.shape.framework.Metrics;
+import com.laivy.the.shape.framework.Utility;
 import com.laivy.the.shape.game.GameScene;
 import com.laivy.the.shape.game.object.ui.HPBar;
 import com.laivy.the.shape.game.object.ui.Relic;
-import com.laivy.the.shape.game.object.ui.Result;
 import com.laivy.the.shape.game.object.ui.Reward;
 import com.laivy.the.shape.game.object.ui.TextObject;
 
@@ -30,11 +30,13 @@ public class Player extends GameObject {
     private int[] reqExp;
     private int level;
     private int damage;
-    private float fireSpeed;
-    private float fireTimer;
+    private float attackSpeed;
+    private float bonusAttackSpeed;
+    private float attackTimer;
     private float targetRotateDegree;
     private float currRotateDegree;
     private float speed;
+    private float bonusSpeed;
     private float invincibleTime;
     private float knockBackDuration;
     private float knockBackTimer;
@@ -49,21 +51,22 @@ public class Player extends GameObject {
         isMove = false;
 
         // 플레이어 관련
-        //maxHp = (int) Metrics.getFloat(R.dimen.PLAYER_HP);
-        maxHp = (int) 10;
+        maxHp = (int) Metrics.getFloat(R.dimen.PLAYER_HP);
         hp = maxHp;
         def = 0;
         speed = Metrics.getFloat(R.dimen.PLAYER_SPEED);
+        bonusSpeed = 0.0f;
         direction = new PointF(0.0f, -1.0f);
         level = 1;
         exp = 0;
-        reqExp = new int[]{ 2, 6, 7, 8, 9, 10 };
+        reqExp = new int[]{ 5, 6, 7, 8, 9, 10, 13, 16, 19, 22, 25, 30, 35, 40, 45, 50 };
         invincibleTime = 0.0f;
 
         // 총알 관련
         damage = (int) Metrics.getFloat(R.dimen.PLAYER_DMG);
-        fireSpeed = Metrics.getFloat(R.dimen.PLAYER_FIRE_SPEED);
-        fireTimer = 0.0f;
+        attackSpeed = Metrics.getFloat(R.dimen.PLAYER_FIRE_SPEED);
+        bonusAttackSpeed = 0.0f;
+        attackTimer = 0.0f;
         
         // 회전
         targetRotateDegree = 0.0f;
@@ -86,6 +89,8 @@ public class Player extends GameObject {
 
         // 유물들
         relics = new ArrayList<>();
+        addRelic(new Relic(Relic.ASTROLABE));
+        addRelic(new Relic(Relic.NINJA_SCROLL));
     }
 
     @Override
@@ -102,6 +107,8 @@ public class Player extends GameObject {
         sprite.setBitmapHeight(sprite.getBitmapHeight() * 2.0f);
         sprite.setPosition(position.x, position.y);
         GameScene.getInstance().add(GameScene.eLayer.SPRITE, sprite);
+
+        Audio.playSound(R.raw.gameover);
     }
 
     @Override
@@ -125,7 +132,7 @@ public class Player extends GameObject {
             knockBackDuration = 0.5f;
             knockBackPower = 100.0f;
             invincibleTime = 0.5f;
-            addHp(-enemy.getDamage() + def);
+            addHp(Math.min(0, -enemy.getDamage() + def));
 
             // 유물 효과
             for (Relic r : relics)
@@ -136,6 +143,7 @@ public class Player extends GameObject {
     public void onLevelUp() {
         exp = 0;
         ++level;
+        addDamage(1);
 
         // 보상 UI 생성, 게임 일시 정지
         Reward reward = new Reward(Metrics.width * 0.2f, Metrics.height * 0.5f);
@@ -149,70 +157,57 @@ public class Player extends GameObject {
 
         // 피격 시 넉백
         if (knockBackDuration != 0.0f) {
-            float delta = (float) (knockBackPower * Math.cos(knockBackTimer * Math.PI / 2.0f / knockBackDuration));
-
-            position.offset(
-                knockBackDirection.x * delta * deltaTime,
-                knockBackDirection.y * delta * deltaTime
-            );
-            hitBox.offset(
-                knockBackDirection.x * delta * deltaTime,
-                knockBackDirection.y * delta * deltaTime
-            );
-
-            // 체력바 최신화
-            hpBar.setPosition(position.x, position.y);
-            hpBar.setValue(hp);
-            hpBar.setMaxValue(maxHp);
-            hpBar.update(deltaTime);
-
-            super.update(deltaTime);
-            knockBackTimer += deltaTime;
-            if (knockBackTimer > knockBackDuration) {
-                knockBackDuration = 0.0f;
-                knockBackTimer = 0.0f;
-            }
+            processKnockBack(deltaTime);
             return;
         }
 
         // 회전해야할 각도가 남아있다면 회전
-        if (targetRotateDegree != 0.0f) {
-            int sign = (int) (targetRotateDegree / Math.abs(targetRotateDegree));
-            currRotateDegree += sign * MAX_ROTATE_DEGREE * deltaTime;
-            targetRotateDegree += -sign * MAX_ROTATE_DEGREE * deltaTime;
-
-            if (sign > 0) {
-                targetRotateDegree = Math.max(0.0f, targetRotateDegree);
-            }
-            else {
-                targetRotateDegree = Math.min(0.0f, targetRotateDegree);
-            }
-
-            // 현재 각도를 0 ~ 360으로 제한
-            if (currRotateDegree < 0.0f)
-                currRotateDegree = 360.0f - currRotateDegree;
-            else if (currRotateDegree > 360.0f)
-                currRotateDegree -= 360.0f;
-
-            // 방향 최신화
-            matrix.reset();
-            matrix.postRotate(currRotateDegree);
-            float[] pos = { 0.0f, -1.0f };
-            matrix.mapPoints(pos);
-            direction.x = pos[0];
-            direction.y = pos[1];
-        }
+        if (targetRotateDegree != 0.0f)
+            processRotation(deltaTime);
 
         // 이동, dstRect 최신화
         if (isMove) {
-            position.offset(direction.x * speed * deltaTime, direction.y * speed * deltaTime);
-            hitBox.offset(direction.x * speed * deltaTime, direction.y * speed * deltaTime);
+            position.offset(direction.x * speed * (1.0f + bonusSpeed) * deltaTime, direction.y * speed * (1.0f + bonusSpeed) * deltaTime);
+            hitBox.offset(direction.x * speed * (1.0f + bonusSpeed) * deltaTime, direction.y * speed * (1.0f + bonusSpeed) * deltaTime);
         }
         super.update(deltaTime);
 
+        // 유물 효과 확인
+        processRelics();
+
         // 총 발사
-        if (fireTimer >= fireSpeed) fire();
-        fireTimer += deltaTime;
+        if (attackTimer >= attackSpeed * (1.0f - bonusAttackSpeed)) {
+            fire();
+
+            // 닌자 두루마리 효과
+            if (hasRelic(Relic.NINJA_SCROLL)) {
+                float[] originDirection = { direction.x, direction.y };
+
+                matrix.reset();
+                matrix.postRotate(-10.0f);
+                float[] pos = { originDirection[0], originDirection[1] };
+                matrix.mapPoints(pos);
+                direction.x = pos[0];
+                direction.y = pos[1];
+                fire();
+
+                matrix.reset();
+                matrix.postRotate(10.0f);
+                pos[0] = originDirection[0];
+                pos[1] = originDirection[1];
+                matrix.mapPoints(pos);
+                direction.x = pos[0];
+                direction.y = pos[1];
+                fire();
+
+                direction.x = originDirection[0];
+                direction.y = originDirection[1];
+            }
+
+            // 아스트롤라베 효과
+            fire(); fire();
+        }
+        attackTimer += deltaTime;
 
         // 체력바 최신화
         hpBar.setPosition(position.x, position.y);
@@ -222,6 +217,21 @@ public class Player extends GameObject {
 
         // 무적 시간 감소
         invincibleTime = Math.max(0.0f, invincibleTime - deltaTime);
+    }
+
+    private void processRelics() {
+        for (Relic r : relics) {
+            if (r.getId() == Relic.RED_SKULL) {
+                if (!r.getActive() && hp <= maxHp / 2.0f) {
+                    r.setActive(true);
+                    addDamage(3);
+                }
+                else if (r.getActive() && hp > maxHp / 2.0f) {
+                    r.setActive(false);
+                    addDamage(-3);
+                }
+            }
+        }
     }
 
     @Override
@@ -238,12 +248,40 @@ public class Player extends GameObject {
     public void fire() {
         Bullet bullet = new Bullet();
         bullet.setBitmap(R.mipmap.bullet);
-        bullet.setDamage(damage);
         bullet.setPosition(position.x, position.y);
-        bullet.setDirection(direction.x, direction.y);
+
+        int bulletDamage = damage;
+
+        // 도박 칩 효과
+        if (hasRelic(Relic.GAMBLING_CHIP))
+            bulletDamage = damage + Utility.getRandom(-2, 3);
+
+        // 닌자 두루마리 효과
+        if (hasRelic(Relic.NINJA_SCROLL))
+            bulletDamage = Math.max(1, (int)(bulletDamage * 0.3f));
+
+        bullet.setDamage(bulletDamage);
+
+        float[] bulletDirection = { direction.x, direction.y };
+
+        // 아스트롤라베 효과
+        if (hasRelic(Relic.ASTROLABE)) {
+            matrix.reset();
+            matrix.postRotate(Utility.getRandom(0.0f, 360.0f));
+            matrix.mapPoints(bulletDirection);
+        }
+
+        // 소주 효과
+        if (hasRelic(Relic.SOZU)) {
+            matrix.reset();
+            matrix.postRotate(Utility.getRandom(-10.0f, 10.0f));
+            matrix.mapPoints(bulletDirection);
+        }
+
+        bullet.setDirection(bulletDirection[0], bulletDirection[1]);
         GameScene.getInstance().add(GameScene.eLayer.BULLET, bullet);
 
-        fireTimer = 0.0f;
+        attackTimer = 0.0f;
     }
 
     public void setTargetRotateDegree(float degree) {
@@ -259,18 +297,6 @@ public class Player extends GameObject {
                 delta = -delta;
         }
         targetRotateDegree = delta;
-    }
-
-    public void setDirection(float x, float y) {
-        if (x == 0.0f && y == 0.0f) {
-            direction.set(0.0f, 0.0f);
-            return;
-        }
-
-        float length = (float) Math.sqrt(x * x + y * y);
-        x /= length;
-        y /= length;
-        direction.set(x, y);
     }
 
     public void addHp(int value) {
@@ -294,10 +320,48 @@ public class Player extends GameObject {
         GameScene.getInstance().add(GameScene.eLayer.TEXT, textObject);
     }
 
+    public void addBonusAttackSpeed(float value) {
+        bonusAttackSpeed = Math.min(0.5f, bonusAttackSpeed + value);
+    }
+
+    private void addBonusSpeed(float value) {
+        bonusSpeed = Math.min(0.5f, bonusSpeed + value);
+    }
+
     public void addRelic(Relic relic) {
         switch (relic.getId()) {
-            case 0:
+            case Relic.KETTLE_BELL:
                 damage += 3;
+                break;
+            case Relic.WAFFLE:
+                addHp(maxHp - hp);
+                break;
+            case Relic.SMOOTH_STONE:
+                addDef(2);
+                break;
+            case Relic.SOZU:
+                addBonusAttackSpeed(0.1f);
+                break;
+            case Relic.WING_BOOTS:
+                addBonusSpeed(0.1f);
+                break;
+            case Relic.BRIMSTONE:
+                addDamage(3);
+                addDef(-1);
+                break;
+            case Relic.NINJA_SCROLL:
+                addBonusAttackSpeed(-1.0f);
+                break;
+            case Relic.CHAMPION_BELT:
+                addBonusAttackSpeed(-0.1f);
+                addBonusSpeed(-0.1f);
+                addDamage(3);
+                break;
+            case Relic.TINY_HOUSE:
+                addDamage(1);
+                addDef(1);
+                addBonusAttackSpeed(0.05f);
+                addBonusSpeed(0.05f);
                 break;
         }
 
@@ -308,7 +372,6 @@ public class Player extends GameObject {
 
         GameScene.getInstance().add(GameScene.eLayer.UI, relic);
     }
-
 
     public boolean hasRelic(int relicId) {
         for (Relic r : relics) {
@@ -360,5 +423,58 @@ public class Player extends GameObject {
 
     public ArrayList<Relic> getRelics() {
         return relics;
+    }
+
+    private void processKnockBack(float deltaTime) {
+        float delta = (float) (knockBackPower * Math.cos(knockBackTimer * Math.PI / 2.0f / knockBackDuration));
+
+        position.offset(
+                knockBackDirection.x * delta * deltaTime,
+                knockBackDirection.y * delta * deltaTime
+        );
+        hitBox.offset(
+                knockBackDirection.x * delta * deltaTime,
+                knockBackDirection.y * delta * deltaTime
+        );
+
+        // 체력바 최신화
+        hpBar.setPosition(position.x, position.y);
+        hpBar.setValue(hp);
+        hpBar.setMaxValue(maxHp);
+        hpBar.update(deltaTime);
+
+        super.update(deltaTime);
+        knockBackTimer += deltaTime;
+        if (knockBackTimer > knockBackDuration) {
+            knockBackDuration = 0.0f;
+            knockBackTimer = 0.0f;
+        }
+    }
+
+    private void processRotation(float deltaTime) {
+        int sign = (int) (targetRotateDegree / Math.abs(targetRotateDegree));
+        currRotateDegree += sign * MAX_ROTATE_DEGREE * deltaTime;
+        targetRotateDegree += -sign * MAX_ROTATE_DEGREE * deltaTime;
+
+        if (sign > 0) {
+            targetRotateDegree = Math.max(0.0f, targetRotateDegree);
+        }
+        else {
+            targetRotateDegree = Math.min(0.0f, targetRotateDegree);
+        }
+
+        // 현재 각도를 0 ~ 360으로 제한
+        if (currRotateDegree < 0.0f)
+            currRotateDegree = 360.0f - currRotateDegree;
+        else if (currRotateDegree > 360.0f)
+            currRotateDegree -= 360.0f;
+
+        // 방향 최신화
+        matrix.reset();
+        matrix.postRotate(currRotateDegree);
+        float[] pos = { 0.0f, -1.0f };
+        matrix.mapPoints(pos);
+        direction.x = pos[0];
+        direction.y = pos[1];
     }
 }

@@ -11,6 +11,7 @@ import android.view.View;
 import androidx.annotation.Nullable;
 
 import com.laivy.the.shape.R;
+import com.laivy.the.shape.framework.Audio;
 import com.laivy.the.shape.framework.Metrics;
 
 public class GameView extends View implements Choreographer.FrameCallback {
@@ -47,6 +48,7 @@ public class GameView extends View implements Choreographer.FrameCallback {
         // 게임오버 시 메인화면으로
         if (GameScene.getInstance().getGameOver() && event.getAction() == MotionEvent.ACTION_DOWN) {
             isRunning = false;
+            Audio.stopMusic();
             Activity activity = (Activity) view.getContext();
             activity.setContentView(R.layout.activity_main);
             return true;

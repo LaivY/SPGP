@@ -4,6 +4,7 @@ import android.graphics.Canvas;
 import android.view.MotionEvent;
 
 import com.laivy.the.shape.R;
+import com.laivy.the.shape.framework.Audio;
 import com.laivy.the.shape.framework.GameObject;
 import com.laivy.the.shape.game.object.Background;
 import com.laivy.the.shape.game.object.system.CollisionChecker;
@@ -92,6 +93,16 @@ public class GameScene {
     }
 
     public void init() {
+        // 오디오 초기화
+        Audio.init();
+        Audio.loadSound(R.raw.hit);
+        Audio.loadSound(R.raw.enemy);
+        Audio.loadSound(R.raw.exp);
+        Audio.loadSound(R.raw.gameover);
+
+        // 배경음 재생
+        Audio.playMusic(R.raw.bgm);
+
         // 수치 초기화
         playTime = 0.0f;
         gameOverDelay = 1.0f;
@@ -155,10 +166,6 @@ public class GameScene {
 
     public void setRunning(boolean running) {
         isRunning = running;
-    }
-
-    public void setGameOver(boolean gameOver) {
-        isGameOver = gameOver;
     }
 
     public ArrayList<GameObject> getLayer(eLayer layer) {
