@@ -1,4 +1,4 @@
-package com.laivy.the.shape.game.object.ui;
+package com.laivy.the.shape.game.ui;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -135,8 +135,10 @@ public class Reward extends GameObject {
             y += paint.descent() - paint.ascent();
 
             paint.setTextSize(20.0f);
-            text = relics[i].getDesc();
-            canvas.drawText(text, rects[i].centerX(), y, paint);
+            for (String str : relics[i].getDesc().split("\r\n")) {
+                canvas.drawText(str, rects[i].centerX(), y, paint);
+                y += paint.descent() - paint.ascent();
+            }
         }
     }
 }

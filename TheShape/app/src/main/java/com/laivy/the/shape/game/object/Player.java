@@ -13,10 +13,10 @@ import com.laivy.the.shape.framework.GameObject;
 import com.laivy.the.shape.framework.Metrics;
 import com.laivy.the.shape.framework.Utility;
 import com.laivy.the.shape.game.GameScene;
-import com.laivy.the.shape.game.object.ui.HPBar;
-import com.laivy.the.shape.game.object.ui.Relic;
-import com.laivy.the.shape.game.object.ui.Reward;
-import com.laivy.the.shape.game.object.ui.TextObject;
+import com.laivy.the.shape.game.ui.HPBar;
+import com.laivy.the.shape.game.ui.Relic;
+import com.laivy.the.shape.game.ui.Reward;
+import com.laivy.the.shape.game.ui.TextObject;
 
 import java.util.ArrayList;
 
@@ -59,7 +59,7 @@ public class Player extends GameObject {
         direction = new PointF(0.0f, -1.0f);
         level = 1;
         exp = 0;
-        reqExp = new int[]{ 5, 6, 7, 8, 9, 10, 13, 16, 19, 22, 25, 30, 35, 40, 45, 50 };
+        reqExp = new int[]{ 1, 1, 7, 8, 9, 10, 13, 16, 19, 22, 25, 30, 35, 40, 45, 50 };
         invincibleTime = 0.0f;
 
         // 총알 관련
@@ -89,8 +89,6 @@ public class Player extends GameObject {
 
         // 유물들
         relics = new ArrayList<>();
-        addRelic(new Relic(Relic.ASTROLABE));
-        addRelic(new Relic(Relic.NINJA_SCROLL));
     }
 
     @Override
@@ -146,9 +144,11 @@ public class Player extends GameObject {
         addDamage(1);
 
         // 보상 UI 생성, 게임 일시 정지
-        Reward reward = new Reward(Metrics.width * 0.2f, Metrics.height * 0.5f);
-        GameScene.getInstance().add(GameScene.eLayer.UI, reward);
-        GameScene.getInstance().setRunning(false);
+        if (level >= 3 && level % 2 == 1) {
+            Reward reward = new Reward(Metrics.width * 0.2f, Metrics.height * 0.5f);
+            GameScene.getInstance().add(GameScene.eLayer.UI, reward);
+            GameScene.getInstance().setRunning(false);
+        }
     }
 
     @Override
@@ -205,7 +205,11 @@ public class Player extends GameObject {
             }
 
             // 아스트롤라베 효과
-            fire(); fire();
+            if (hasRelic(Relic.ASTROLABE)) {
+                fire();
+                fire();
+            }
+            attackTimer = 0.0f;
         }
         attackTimer += deltaTime;
 
@@ -280,8 +284,6 @@ public class Player extends GameObject {
 
         bullet.setDirection(bulletDirection[0], bulletDirection[1]);
         GameScene.getInstance().add(GameScene.eLayer.BULLET, bullet);
-
-        attackTimer = 0.0f;
     }
 
     public void setTargetRotateDegree(float degree) {
@@ -343,7 +345,7 @@ public class Player extends GameObject {
                 addBonusAttackSpeed(0.1f);
                 break;
             case Relic.WING_BOOTS:
-                addBonusSpeed(0.1f);
+                addBonusSpeed(0.3f);
                 break;
             case Relic.BRIMSTONE:
                 addDamage(3);
@@ -362,6 +364,15 @@ public class Player extends GameObject {
                 addDef(1);
                 addBonusAttackSpeed(0.05f);
                 addBonusSpeed(0.05f);
+                break;
+            case Relic.BOTTLED_FLAME:
+                GameScene.getInstance().add(GameScene.eLayer.PLAYER, new Supporter(Supporter.FLAME_SUPPORTER));
+                break;
+//            case Relic.BOTTLED_TORNADO:
+//                GameScene.getInstance().add(GameScene.eLayer.PLAYER, new Supporter(Supporter.TORNADO_SUPPORTER));
+//                break;
+            case Relic.BOTTLED_LIGHTNING:
+                GameScene.getInstance().add(GameScene.eLayer.PLAYER, new Supporter(Supporter.LIGHTNING_SUPPORTER));
                 break;
         }
 
@@ -394,7 +405,7 @@ public class Player extends GameObject {
     }
 
     public int getReqExp() {
-        return reqExp[level - 1];
+        return reqExp[ Math.min(reqExp.length - 1, level - 1)];
     }
 
     public int getLevel() {
@@ -419,6 +430,10 @@ public class Player extends GameObject {
 
     public int getDamage() {
         return damage;
+    }
+
+    public PointF getDirection() {
+        return direction;
     }
 
     public ArrayList<Relic> getRelics() {

@@ -7,7 +7,7 @@ import com.laivy.the.shape.R;
 import com.laivy.the.shape.framework.Audio;
 import com.laivy.the.shape.framework.GameObject;
 import com.laivy.the.shape.game.GameScene;
-import com.laivy.the.shape.game.object.ui.Relic;
+import com.laivy.the.shape.game.ui.Relic;
 
 public class Exp extends GameObject {
     private int exp;
@@ -38,7 +38,7 @@ public class Exp extends GameObject {
         dx /= length;
         dy /= length;
 
-        float speed = 500.0f;
+        float speed = 50.0f;
         position.offset(dx * speed * deltaTime, dy * speed * deltaTime);
         hitBox.offset(dx * speed * deltaTime, dy * speed * deltaTime);
         super.update(deltaTime);

@@ -4,13 +4,14 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PointF;
 import android.graphics.RectF;
+import android.util.Log;
 
 import com.laivy.the.shape.R;
 import com.laivy.the.shape.framework.Audio;
 import com.laivy.the.shape.framework.GameObject;
 import com.laivy.the.shape.game.GameScene;
-import com.laivy.the.shape.game.object.ui.Relic;
-import com.laivy.the.shape.game.object.ui.TextObject;
+import com.laivy.the.shape.game.ui.Relic;
+import com.laivy.the.shape.game.ui.TextObject;
 
 public class Enemy extends GameObject {
     private int hp;
@@ -52,6 +53,33 @@ public class Enemy extends GameObject {
             damageText.setColor(Color.WHITE);
             damageText.setTextSize(40.0f);
             damageText.setText(Integer.toString(bullet.getDamage()));
+            damageText.setLifeTime(0.5f);
+            damageText.setPosition(position.x, position.y - getBitmapHeight());
+            GameScene.getInstance().add(GameScene.eLayer.TEXT, damageText);
+
+            // 효과음 출력
+            Audio.playSound(R.raw.hit);
+        }
+        else if (object instanceof SplashSprite) {
+            hp -= GameScene.getInstance().getPlayer().getDamage();
+            knockBackDuration = 0.5f;
+            knockBackPower = 300.0f;
+
+            PointF spritePosition = object.getPosition();
+            float dx = position.x - spritePosition.x;
+            float dy = position.y - spritePosition.y;
+            float length = (float) Math.sqrt(dx * dx + dy * dy);
+            dx /= length;
+            dy /= length;
+
+            knockBackDirection.x = dx;
+            knockBackDirection.y = dy;
+
+            // 데미지 표기
+            TextObject damageText = new TextObject();
+            damageText.setColor(Color.WHITE);
+            damageText.setTextSize(40.0f);
+            damageText.setText(Integer.toString(GameScene.getInstance().getPlayer().getDamage()));
             damageText.setLifeTime(0.5f);
             damageText.setPosition(position.x, position.y - getBitmapHeight());
             GameScene.getInstance().add(GameScene.eLayer.TEXT, damageText);

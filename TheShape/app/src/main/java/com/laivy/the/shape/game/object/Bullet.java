@@ -11,7 +11,7 @@ import com.laivy.the.shape.game.GameScene;
 
 public class Bullet extends GameObject {
     private int damage;
-    private float lifeTime;
+    protected float lifeTime;
     private float degree;
     private float speed;
     private PointF direction;

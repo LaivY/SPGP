@@ -1,4 +1,4 @@
-package com.laivy.the.shape.game.object.ui;
+package com.laivy.the.shape.game.ui;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;

@@ -1,30 +1,34 @@
-package com.laivy.the.shape.game.object.ui;
+package com.laivy.the.shape.game.ui;
 
 import android.graphics.Canvas;
 import android.view.MotionEvent;
 
 import com.laivy.the.shape.R;
 import com.laivy.the.shape.framework.GameObject;
+import com.laivy.the.shape.game.GameScene;
+import com.laivy.the.shape.game.object.Supporter;
 
 public class Relic extends GameObject {
     // 유물 총 개수, 각 유물 id 설정
-    public static int RELIC_COUNT           = 16;
-    public static final int KETTLE_BELL     = 0;
-    public static final int BLOOD_VIAL      = 1;
-    public static final int BRONZE_SCALES   = 2;
-    public static final int RED_SKULL       = 3;
-    public static final int WAFFLE          = 4;
-    public static final int SMOOTH_STONE    = 5;
-    public static final int SOZU            = 6;
-    public static final int GAMBLING_CHIP   = 7;
-    public static final int WING_BOOTS      = 8;
-    public static final int BRIMSTONE       = 9;
-    public static final int MEAT            = 10;
-    public static final int NINJA_SCROLL    = 11;
-    public static final int CHAMPION_BELT   = 12;
-    public static final int TINY_HOUSE      = 13;
-    public static final int BAG_OF_PREP     = 14;
-    public static final int ASTROLABE       = 15;
+    public static int RELIC_COUNT               = 18;
+    public static final int KETTLE_BELL         = 0;
+    public static final int BLOOD_VIAL          = 1;
+    public static final int BRONZE_SCALES       = 2;
+    public static final int RED_SKULL           = 3;
+    public static final int WAFFLE              = 4;
+    public static final int SMOOTH_STONE        = 5;
+    public static final int SOZU                = 6;
+    public static final int GAMBLING_CHIP       = 7;
+    public static final int WING_BOOTS          = 8;
+    public static final int BRIMSTONE           = 9;
+    public static final int MEAT                = 10;
+    public static final int NINJA_SCROLL        = 11;
+    public static final int CHAMPION_BELT       = 12;
+    public static final int TINY_HOUSE          = 13;
+    public static final int BAG_OF_PREP         = 14;
+    public static final int ASTROLABE           = 15;
+    public static final int BOTTLED_FLAME       = 16;
+    public static final int BOTTLED_LIGHTNING   = 17;
 
     private int id;
     private String name;
@@ -47,7 +51,7 @@ public class Relic extends GameObject {
             case BRONZE_SCALES:
                 setBitmap(R.mipmap.bronze_scales);
                 name = "청동 비늘";
-                desc = "피격 시 해당 적에게 내 공격력 만큼의 피해를 줌";
+                desc = "피격 시 해당 적에게\r\n내 공격력 만큼의 피해를 줌";
                 break;
             case RED_SKULL:
                 setBitmap(R.mipmap.red_skull);
@@ -77,7 +81,7 @@ public class Relic extends GameObject {
             case WING_BOOTS:
                 setBitmap(R.mipmap.wing_boots);
                 name = "윙 부츠";
-                desc = "이동속도 +10%";
+                desc = "이동속도 +30%";
                 break;
             case BRIMSTONE:
                 setBitmap(R.mipmap.brimstone);
@@ -113,6 +117,21 @@ public class Relic extends GameObject {
                 setBitmap(R.mipmap.astrolabe);
                 name = "아스트롤라베";
                 desc = "총알 발사 수 +2, 총알이 랜덤한 방향으로 발사됨";
+                break;
+            case BOTTLED_FLAME:
+                setBitmap(R.mipmap.bottled_flame);
+                name = "병 속의 불꽃";
+                desc = "관통되는 총알을 발사하는 불꽃 정령을 얻음";
+                break;
+//            case BOTTLED_TORNADO:
+//                setBitmap(R.mipmap.bottled_tornado);
+//                name = "병 속의 폭풍";
+//                desc = "적을 끌어당기는 총알을 발사하는 폭풍 정령을 얻음";
+//                break;
+            case BOTTLED_LIGHTNING:
+                setBitmap(R.mipmap.bottled_lightning);
+                name = "병 속의 번개";
+                desc = "광역 폭발을 일으키는 총알을 발사하는 번개 정령을 얻음";
                 break;
             default:
                 name = "이름";

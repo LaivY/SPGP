@@ -1,10 +1,9 @@
-package com.laivy.the.shape.game.object.ui;
+package com.laivy.the.shape.game.ui;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
-import android.util.Log;
 
 import com.laivy.the.shape.R;
 import com.laivy.the.shape.framework.GameObject;

@@ -1,6 +1,7 @@
-package com.laivy.the.shape.game.object.system;
+package com.laivy.the.shape.game.system;
 
 import android.graphics.PointF;
+import android.util.Log;
 
 import com.laivy.the.shape.R;
 import com.laivy.the.shape.framework.GameObject;

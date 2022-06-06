@@ -1,19 +1,16 @@
-package com.laivy.the.shape.game.object.system;
+package com.laivy.the.shape.game.system;
 
-import android.graphics.Color;
-import android.graphics.PointF;
 import android.graphics.RectF;
 
-import com.laivy.the.shape.R;
 import com.laivy.the.shape.framework.GameObject;
 import com.laivy.the.shape.game.GameScene;
 import com.laivy.the.shape.game.object.Bullet;
 import com.laivy.the.shape.game.object.Enemy;
 import com.laivy.the.shape.game.object.Exp;
+import com.laivy.the.shape.game.object.FlameBullet;
+import com.laivy.the.shape.game.object.LightningBullet;
 import com.laivy.the.shape.game.object.Player;
-import com.laivy.the.shape.game.object.Sprite;
-import com.laivy.the.shape.game.object.ui.Relic;
-import com.laivy.the.shape.game.object.ui.TextObject;
+import com.laivy.the.shape.game.object.SplashSprite;
 
 import java.util.ArrayList;
 
@@ -30,6 +27,7 @@ public class CollisionChecker extends GameObject {
         Player player = GameScene.getInstance().getPlayer();
         ArrayList<GameObject> enemies = GameScene.getInstance().getLayer(GameScene.eLayer.ENEMY);
         ArrayList<GameObject> bullets = GameScene.getInstance().getLayer(GameScene.eLayer.BULLET);
+        ArrayList<GameObject> sprites = GameScene.getInstance().getLayer(GameScene.eLayer.SPRITE);
 
         for (GameObject o1 : enemies) {
             if (!o1.getIsValid()) continue;
@@ -45,12 +43,50 @@ public class CollisionChecker extends GameObject {
             // 적과 총알 간의 충돌 처리
             for (GameObject o2 : bullets) {
                 if (!o2.getIsValid()) continue;
+
                 Bullet bullet = (Bullet) o2;
                 if (isCollided(enemy.getHitBox(), bullet.getHitBox())) {
+                    // 불
+                    if (bullet instanceof FlameBullet) {
+                        FlameBullet piercingBullet = (FlameBullet) bullet;
+                        if (piercingBullet.getHitList().contains(enemy))
+                            continue;
+                        piercingBullet.addHitList(enemy);
+                        enemy.onHit(bullet);
+                        continue;
+                    }
+
+                    // 번개
+                    if (bullet instanceof LightningBullet) {
+                        GameScene.getInstance().remove(GameScene.eLayer.BULLET, bullet);
+                        continue;
+                    }
+
+                    // 일반 총알
                     enemy.onHit(bullet);
                     GameScene.getInstance().remove(GameScene.eLayer.BULLET, bullet);
                 }
             }
+
+            // 적과 스플래시 스프라이트 간의 충돌 처리
+            for (GameObject o2 : sprites) {
+                if (!o2.getIsValid()) continue;
+                if (!(o2 instanceof SplashSprite)) continue;
+
+                SplashSprite sprite = (SplashSprite) o2;
+                if (sprite.getUsed()) continue;
+
+                if (isCollided(enemy.getHitBox(), sprite.getHitBox()))
+                    enemy.onHit(sprite);
+            }
+        }
+
+        for (GameObject o : sprites) {
+            if (!o.getIsValid()) continue;
+            if (!(o instanceof SplashSprite)) continue;
+
+            SplashSprite sprite = (SplashSprite) o;
+            sprite.setUsed(true);
         }
     }
 
