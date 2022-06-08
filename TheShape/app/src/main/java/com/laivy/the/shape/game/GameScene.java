@@ -6,6 +6,7 @@ import android.view.MotionEvent;
 import com.laivy.the.shape.R;
 import com.laivy.the.shape.framework.Audio;
 import com.laivy.the.shape.framework.GameObject;
+import com.laivy.the.shape.framework.Metrics;
 import com.laivy.the.shape.game.object.Background;
 import com.laivy.the.shape.game.object.Supporter;
 import com.laivy.the.shape.game.system.CollisionChecker;
@@ -133,8 +134,12 @@ public class GameScene {
         // 컨트롤러
         GameObject stick = new GameObject();
         stick.setBitmap(R.mipmap.controller);
+        stick.setBitmapWidth(Controller.RADIUS);
+        stick.setBitmapHeight(Controller.RADIUS);
         Controller controller = new Controller();
         controller.setBitmap(R.mipmap.controller_base);
+        controller.setBitmapWidth(Controller.RADIUS * 2.0f);
+        controller.setBitmapHeight(Controller.RADIUS * 2.0f);
         controller.setStick(stick);
         layers.get(eLayer.UI).add(controller);
 

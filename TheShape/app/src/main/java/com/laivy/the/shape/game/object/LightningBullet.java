@@ -10,7 +10,7 @@ public class LightningBullet extends Bullet {
     public void onDestroy() {
         if (lifeTime < 0.0f) return;
 
-        Sprite sprite = new SplashSprite();
+        SplashSprite sprite = new SplashSprite();
         sprite.addImage(R.mipmap.splash0);
         sprite.addImage(R.mipmap.splash1);
         sprite.addImage(R.mipmap.splash2);
@@ -21,6 +21,7 @@ public class LightningBullet extends Bullet {
         sprite.setBitmapWidth(sprite.getBitmapWidth() * 2.0f);
         sprite.setBitmapHeight(sprite.getBitmapHeight() * 2.0f);
         sprite.setPosition(position.x, position.y);
+        sprite.setDamage((int) Math.ceil(GameScene.getInstance().getPlayer().getDamage() / 3.0f));
         GameScene.getInstance().add(GameScene.eLayer.SPRITE, sprite);
     }
 }

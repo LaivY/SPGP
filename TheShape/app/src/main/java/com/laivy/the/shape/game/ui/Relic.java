@@ -10,7 +10,7 @@ import com.laivy.the.shape.game.object.Supporter;
 
 public class Relic extends GameObject {
     // 유물 총 개수, 각 유물 id 설정
-    public static int RELIC_COUNT               = 18;
+    public static int RELIC_COUNT               = 19;
     public static final int KETTLE_BELL         = 0;
     public static final int BLOOD_VIAL          = 1;
     public static final int BRONZE_SCALES       = 2;
@@ -29,6 +29,7 @@ public class Relic extends GameObject {
     public static final int ASTROLABE           = 15;
     public static final int BOTTLED_FLAME       = 16;
     public static final int BOTTLED_LIGHTNING   = 17;
+    public static final int NUCLEAR_BATTERY     = 18;
 
     private int id;
     private String name;
@@ -101,7 +102,7 @@ public class Relic extends GameObject {
             case CHAMPION_BELT:
                 setBitmap(R.mipmap.champion_belt);
                 name = "챔피언 벨트";
-                desc = "공격 속도 -10%, 이동 속도 -10%, 공격력 +3";
+                desc = "공격 속도 -10%, 이동 속도 -10%\r\n공격력 +3";
                 break;
             case TINY_HOUSE:
                 setBitmap(R.mipmap.tiny_house);
@@ -131,7 +132,12 @@ public class Relic extends GameObject {
             case BOTTLED_LIGHTNING:
                 setBitmap(R.mipmap.bottled_lightning);
                 name = "병 속의 번개";
-                desc = "광역 폭발을 일으키는 총알을 발사하는\r\n번개 정령을 얻음";
+                desc = "광역 폭발을 일으키는 총알을\r\n발사하는 번개 정령을 얻음";
+                break;
+            case NUCLEAR_BATTERY:
+                setBitmap(R.mipmap.battery);
+                name = "핵 배터리";
+                desc = "적을 처치하면 광역 데미지를\r\n주는 폭발을 일으킵니다,";
                 break;
             default:
                 name = "이름";

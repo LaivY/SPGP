@@ -100,18 +100,21 @@ public class Supporter extends GameObject{
             case FLAME_SUPPORTER:
                 bullet = new FlameBullet();
                 bullet.setBitmap(R.mipmap.flame_bullet);
+                bullet.setDamage((int) Math.ceil(player.getDamage() / 3.0f));
                 break;
             case TORNADO_SUPPORTER:
                 bullet = new Bullet();
                 bullet.setBitmap(R.mipmap.bullet);
+                bullet.setDamage(player.getDamage());
                 break;
             case LIGHTNING_SUPPORTER:
                 bullet = new LightningBullet();
                 bullet.setBitmap(R.mipmap.lightning_bullet);
+                bullet.setDamage(0);
                 break;
+            default:
+                return;
         }
-        if (bullet == null) return;
-        bullet.setDamage(player.getDamage());
         bullet.setPosition(position.x, position.y);
         bullet.setDirection(direction.x, direction.y);
         GameScene.getInstance().add(GameScene.eLayer.BULLET, bullet);

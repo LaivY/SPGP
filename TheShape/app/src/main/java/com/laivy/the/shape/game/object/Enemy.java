@@ -64,7 +64,7 @@ public class Enemy extends GameObject {
             Audio.playSound(R.raw.hit);
         }
         else if (object instanceof SplashSprite) {
-            hp -= GameScene.getInstance().getPlayer().getDamage();
+            hp -= ((SplashSprite) object).getDamage();
             knockBackDuration = 0.5f;
             knockBackPower = 300.0f;
 
@@ -139,6 +139,23 @@ public class Enemy extends GameObject {
         // 고기덩어리
         if (player.hasRelic(Relic.MEAT) && player.getHp() <= player.getMaxHp() / 2.0f) {
             player.addHp(3);
+        }
+
+        // 핵 베터리
+        if (player.hasRelic(Relic.NUCLEAR_BATTERY)) {
+            SplashSprite sprite = new SplashSprite();
+            sprite.addImage(R.mipmap.splash0);
+            sprite.addImage(R.mipmap.splash1);
+            sprite.addImage(R.mipmap.splash2);
+            sprite.addImage(R.mipmap.splash3);
+            sprite.addImage(R.mipmap.splash4);
+            sprite.addImage(R.mipmap.splash5);
+            sprite.setOnlyOnce(true);
+            sprite.setBitmapWidth(sprite.getBitmapWidth() * 1.5f);
+            sprite.setBitmapHeight(sprite.getBitmapHeight() * 1.5f);
+            sprite.setPosition(position.x, position.y);
+            sprite.setDamage((int) Math.ceil(GameScene.getInstance().getPlayer().getDamage() / 5.0f));
+            GameScene.getInstance().add(GameScene.eLayer.SPRITE, sprite);
         }
     }
 

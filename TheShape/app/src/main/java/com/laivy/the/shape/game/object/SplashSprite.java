@@ -4,10 +4,12 @@ import android.graphics.RectF;
 
 public class SplashSprite extends Sprite {
     private boolean isUsed;
+    private int damage;
 
     public SplashSprite() {
         // getHitBox 함수가 호출되면 true 로 바뀜
         isUsed = false;
+        damage = 1;
         hitBox = new RectF();
     }
 
@@ -24,5 +26,13 @@ public class SplashSprite extends Sprite {
 
     public boolean getUsed() {
         return isUsed;
+    }
+
+    public int getDamage() {
+        return damage;
+    }
+
+    public void setDamage(int damage) {
+        this.damage = damage;
     }
 }

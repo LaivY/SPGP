@@ -89,6 +89,7 @@ public class Player extends GameObject {
 
         // 유물들
         relics = new ArrayList<>();
+        addRelic(new Relic(Relic.NUCLEAR_BATTERY));
     }
 
     @Override

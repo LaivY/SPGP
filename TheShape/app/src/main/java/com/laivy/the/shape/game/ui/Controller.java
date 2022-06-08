@@ -5,13 +5,14 @@ import android.graphics.PointF;
 import android.view.MotionEvent;
 
 import com.laivy.the.shape.framework.GameObject;
+import com.laivy.the.shape.framework.Metrics;
 import com.laivy.the.shape.game.GameScene;
 import com.laivy.the.shape.game.object.Player;
 
 public class Controller extends GameObject {
-    private final float CONTROLLER_STICK_RADIUS = 80.0f;
+    public static final float RADIUS = Metrics.height * 0.14f;
     private boolean isActive;
-    private PointF currPosition;
+    private final PointF currPosition;
     private GameObject stick;
 
     public Controller() {
@@ -43,11 +44,11 @@ public class Controller extends GameObject {
                     float dx = currPosition.x - position.x;
                     float dy = currPosition.y - position.y;
                     float length = (float) Math.sqrt(dx * dx + dy * dy);
-                    if (length >= CONTROLLER_STICK_RADIUS) {
+                    if (length >= RADIUS / 2.0f) {
                         dx /= length;
                         dy /= length;
-                        dx *= CONTROLLER_STICK_RADIUS;
-                        dy *= CONTROLLER_STICK_RADIUS;
+                        dx *= RADIUS / 2.0f;
+                        dy *= RADIUS / 2.0f;
                     }
                     stick.setPosition(position.x + dx, position.y + dy);
                 }
