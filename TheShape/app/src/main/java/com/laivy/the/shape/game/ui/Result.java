@@ -15,8 +15,8 @@ public class Result extends GameObject {
     final float height;
 
     public Result() {
-        width = 600.0f;
-        height = 400.0f;
+        width = Metrics.width * 0.4f;
+        height = Metrics.height * 0.5f;
         dstRect.set(-width / 2.0f, -height / 2.0f, width / 2.0f, height / 2.0f);
         dstRect.offset(Metrics.width / 2.0f, Metrics.height / 2.0f);
 
@@ -42,18 +42,18 @@ public class Result extends GameObject {
         paint.setAlpha(255);
 
         paint.setColor(Color.BLACK);
-        paint.setTextSize(50.0f);
+        paint.setTextSize(Metrics.height * 0.08f);
         paint.setTextAlign(Paint.Align.CENTER);
-        canvas.drawText("게임오버", Metrics.width / 2.0f, Metrics.height / 2.0f - height / 2.0f + 100.0f, paint);
+        canvas.drawText("게임오버", Metrics.width / 2.0f, Metrics.height / 2.0f - height / 2.0f + Metrics.height * 0.15f, paint);
 
         float playTime = GameScene.getInstance().getPlayTime();
         int min = (int) (playTime / 60);
         int sec = (int) (playTime % 60);
         paint.setColor(0xFF5DBB63);
-        paint.setTextSize(30.0f);
+        paint.setTextSize(Metrics.height * 0.05f);
         canvas.drawText("버틴 시간 : " + min + "분 " + sec + "초", Metrics.width / 2.0f, Metrics.height / 2.0f, paint);
 
-        float y = Metrics.height / 2.0f + height / 2.0f - 100.0f;
+        float y = Metrics.height / 2.0f + height / 2.0f - Metrics.height * 0.15f;
         paint.setColor(Color.BLACK);
         canvas.drawText("아무곳이나 터치하면", Metrics.width / 2.0f, y, paint);
         y += paint.descent() - paint.ascent();

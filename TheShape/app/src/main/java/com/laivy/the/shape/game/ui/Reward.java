@@ -125,7 +125,7 @@ public class Reward extends GameObject {
             relics[i].draw(canvas);
 
             paint.setColor(Color.BLACK);
-            paint.setTextSize(30.0f);
+            paint.setTextSize(Metrics.height * 0.03f);
             paint.setTextAlign(Paint.Align.CENTER);
 
             float y = rects[i].centerY() + relics[i].getBitmapHeight() / 2.0f;
@@ -134,7 +134,7 @@ public class Reward extends GameObject {
             canvas.drawText(text, rects[i].centerX(), y, paint);
             y += paint.descent() - paint.ascent();
 
-            paint.setTextSize(20.0f);
+            paint.setTextSize(Metrics.height * 0.025f);
             for (String str : relics[i].getDesc().split("\r\n")) {
                 canvas.drawText(str, rects[i].centerX(), y, paint);
                 y += paint.descent() - paint.ascent();
