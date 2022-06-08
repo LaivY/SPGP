@@ -59,7 +59,7 @@ public class Player extends GameObject {
         direction = new PointF(0.0f, -1.0f);
         level = 1;
         exp = 0;
-        reqExp = new int[]{ 1, 1, 7, 8, 9, 10, 13, 16, 19, 22, 25, 30, 35, 40, 45, 50 };
+        reqExp = new int[]{ 5, 6, 7, 8, 9, 10, 13, 16, 19, 22, 25, 30, 35, 40, 45, 50 };
         invincibleTime = 0.0f;
 
         // 총알 관련
@@ -144,7 +144,7 @@ public class Player extends GameObject {
         addDamage(1);
 
         // 보상 UI 생성, 게임 일시 정지
-        if (level >= 3 && level % 2 == 1) {
+        if (level >= 2 && level % 2 == 0 && relics.size() <= Relic.RELIC_COUNT - 3) {
             Reward reward = new Reward(Metrics.width * 0.2f, Metrics.height * 0.5f);
             GameScene.getInstance().add(GameScene.eLayer.UI, reward);
             GameScene.getInstance().setRunning(false);
@@ -378,7 +378,10 @@ public class Player extends GameObject {
 
         relic.setBitmapWidth(Metrics.width * 0.08f);
         relic.setBitmapHeight(Metrics.width * 0.08f);
-        relic.setPosition((relic.getBitmapWidth() / 2.0f) + (relics.size() * relic.getBitmapWidth() / 2.0f), relic.getBitmapHeight() / 2.0f);
+        relic.setPosition(
+                (relic.getBitmapWidth() / 2.0f) + (relics.size() % 5 * relic.getBitmapWidth() / 2.0f),
+                relic.getBitmapHeight() / 2.0f + (relics.size() / 5 * relic.getBitmapHeight() / 2.0f)
+        );
         relics.add(relic);
 
         GameScene.getInstance().add(GameScene.eLayer.UI, relic);

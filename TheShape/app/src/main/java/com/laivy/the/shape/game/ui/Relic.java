@@ -71,7 +71,7 @@ public class Relic extends GameObject {
             case SOZU:
                 setBitmap(R.mipmap.sozu);
                 name = "소주";
-                desc = "공격속도 +10%, 총알 발사 방향이 약간 흔들림";
+                desc = "공격속도 +10%\r\n총알 발사 방향이 약간 흔들림";
                 break;
             case GAMBLING_CHIP:
                 setBitmap(R.mipmap.gambling_chip);
@@ -91,12 +91,12 @@ public class Relic extends GameObject {
             case MEAT:
                 setBitmap(R.mipmap.meat);
                 name = "고기 덩어리";
-                desc = "체력이 50% 이하일 때 적 처치 시 체력 3 회복";
+                desc = "체력이 50% 이하일 때\r\n적 처치 시 체력 3 회복";
                 break;
             case NINJA_SCROLL:
                 setBitmap(R.mipmap.ninja_scroll);
                 name = "닌자 두루마리";
-                desc = "최종 데미지 -70%, 공격 속도 -100%, 총알이 세 갈레로 나감";
+                desc = "최종 데미지 -70%, 공격 속도 -100%\r\n총알이 세 갈레로 나감";
                 break;
             case CHAMPION_BELT:
                 setBitmap(R.mipmap.champion_belt);
@@ -106,7 +106,7 @@ public class Relic extends GameObject {
             case TINY_HOUSE:
                 setBitmap(R.mipmap.tiny_house);
                 name = "작은 집";
-                desc = "공격력 +1, 방어력 +1, 공격 속도 +5%, 이동 속도 +5%";
+                desc = "공격력 +1, 방어력 +1\r\n공격 속도 +5%, 이동 속도 +5%";
                 break;
             case BAG_OF_PREP:
                 setBitmap(R.mipmap.bag_of_prep);
@@ -116,12 +116,12 @@ public class Relic extends GameObject {
             case ASTROLABE:
                 setBitmap(R.mipmap.astrolabe);
                 name = "아스트롤라베";
-                desc = "총알 발사 수 +2, 총알이 랜덤한 방향으로 발사됨";
+                desc = "총알 발사 수 +2\r\n총알이 랜덤한 방향으로 발사됨";
                 break;
             case BOTTLED_FLAME:
                 setBitmap(R.mipmap.bottled_flame);
                 name = "병 속의 불꽃";
-                desc = "관통되는 총알을 발사하는 불꽃 정령을 얻음";
+                desc = "관통되는 총알을 발사하는\r\n불꽃 정령을 얻음";
                 break;
 //            case BOTTLED_TORNADO:
 //                setBitmap(R.mipmap.bottled_tornado);
@@ -131,7 +131,7 @@ public class Relic extends GameObject {
             case BOTTLED_LIGHTNING:
                 setBitmap(R.mipmap.bottled_lightning);
                 name = "병 속의 번개";
-                desc = "광역 폭발을 일으키는 총알을 발사하는 번개 정령을 얻음";
+                desc = "광역 폭발을 일으키는 총알을 발사하는\r\n번개 정령을 얻음";
                 break;
             default:
                 name = "이름";

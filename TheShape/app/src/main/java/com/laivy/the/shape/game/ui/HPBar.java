@@ -6,6 +6,7 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 
 import com.laivy.the.shape.R;
+import com.laivy.the.shape.framework.BitmapPool;
 import com.laivy.the.shape.framework.GameObject;
 import com.laivy.the.shape.framework.Metrics;
 
@@ -23,8 +24,8 @@ public class HPBar extends GameObject {
         barPaint = new Paint();
         base = new RectF();
         bar = new RectF();
-        width = Metrics.getFloat(R.dimen.HPBAR_WIDTH);
-        height = Metrics.getFloat(R.dimen.HPBAR_HEIGHT);
+        width = BitmapPool.get(R.mipmap.player).getWidth() * Metrics.getFloat(R.dimen.HPBAR_WIDTH);
+        height = 0.1f * width;
         value = 0.0f;
         maxValue = 0.0f;
         heightOffset = 0.0f;

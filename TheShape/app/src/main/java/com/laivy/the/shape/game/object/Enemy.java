@@ -9,6 +9,7 @@ import android.util.Log;
 import com.laivy.the.shape.R;
 import com.laivy.the.shape.framework.Audio;
 import com.laivy.the.shape.framework.GameObject;
+import com.laivy.the.shape.framework.Metrics;
 import com.laivy.the.shape.game.GameScene;
 import com.laivy.the.shape.game.ui.Relic;
 import com.laivy.the.shape.game.ui.TextObject;
@@ -34,7 +35,9 @@ public class Enemy extends GameObject {
         knockBackPower = 0.0f;
         knockBackDirection = new PointF();
         direction = new PointF();
-        hitBox = new RectF(-30.0f, -30.0f, 30.0f, 30.0f);
+
+        float length = Metrics.getFloat(R.dimen.ENEMY_HITBOX_LENGTH);
+        hitBox = new RectF(-length / 2.0f, -length / 2.0f, length / 2.0f, length / 2.0f);
     }
 
     public void onHit(GameObject object) {
@@ -51,7 +54,7 @@ public class Enemy extends GameObject {
             // 데미지 표기
             TextObject damageText = new TextObject();
             damageText.setColor(Color.WHITE);
-            damageText.setTextSize(40.0f);
+            damageText.setTextSize(Metrics.height * Metrics.getFloat(R.dimen.FONT_SIZE));
             damageText.setText(Integer.toString(bullet.getDamage()));
             damageText.setLifeTime(0.5f);
             damageText.setPosition(position.x, position.y - getBitmapHeight());
@@ -78,7 +81,7 @@ public class Enemy extends GameObject {
             // 데미지 표기
             TextObject damageText = new TextObject();
             damageText.setColor(Color.WHITE);
-            damageText.setTextSize(40.0f);
+            damageText.setTextSize(Metrics.height * Metrics.getFloat(R.dimen.FONT_SIZE));
             damageText.setText(Integer.toString(GameScene.getInstance().getPlayer().getDamage()));
             damageText.setLifeTime(0.5f);
             damageText.setPosition(position.x, position.y - getBitmapHeight());
@@ -89,7 +92,7 @@ public class Enemy extends GameObject {
         }
         else if (object instanceof Player) {
             knockBackDuration = 0.5f;
-            knockBackPower = 500.0f;
+            knockBackPower = 300.0f;
 
             knockBackDirection.x = -direction.x;
             knockBackDirection.y = -direction.y;
@@ -102,7 +105,7 @@ public class Enemy extends GameObject {
                     hp -= GameScene.getInstance().getPlayer().getDamage();
                     TextObject damageText = new TextObject();
                     damageText.setColor(Color.WHITE);
-                    damageText.setTextSize(40.0f);
+                    damageText.setTextSize(Metrics.height * Metrics.getFloat(R.dimen.FONT_SIZE));
                     damageText.setText(Integer.toString(GameScene.getInstance().getPlayer().getDamage()));
                     damageText.setLifeTime(0.5f);
                     damageText.setPosition(position.x, position.y - getBitmapHeight());
@@ -203,6 +206,24 @@ public class Enemy extends GameObject {
 
     public void setSpeed(float speed) {
         this.speed = speed;
+    }
+
+    public void setScale(float scale) {
+        // 비트맵 크기
+        setBitmapWidth(getBitmapWidth() * scale);
+        setBitmapHeight(getBitmapHeight() * scale);
+        float length = Metrics.getFloat(R.dimen.ENEMY_HITBOX_LENGTH);
+        hitBox.set(
+                -length / 2.0f * scale,
+                -length / 2.0f * scale,
+                length / 2.0f * scale,
+                length / 2.0f * scale
+        );
+        hitBox.offset(position.x, position.y);
+
+        // 스탯
+        hp *= scale;
+        damage *= scale;
     }
 
     public int getDamage() {

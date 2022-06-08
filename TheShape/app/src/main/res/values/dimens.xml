@@ -3,8 +3,10 @@
     <dimen name="PLAYER_HP">100</dimen>
     <dimen name="PLAYER_DMG">3</dimen>
     <dimen name="PLAYER_SPEED">300</dimen>
-    <dimen name="EXPBAR_WIDTH">1000</dimen>
-    <dimen name="HPBAR_WIDTH">100</dimen>
-    <dimen name="HPBAR_HEIGHT">10</dimen>
+    <dimen name="EXPBAR_WIDTH">0.5</dimen>
+    <dimen name="EXPBAR_HEIGHT">0.04</dimen>
+    <dimen name="HPBAR_WIDTH">1.5</dimen>
+    <dimen name="ENEMY_HITBOX_LENGTH">60</dimen>
     <item name="PLAYER_FIRE_SPEED" type="dimen" format="float">0.2</item>
+    <item name="FONT_SIZE" type="dimen" format="float">0.04</item>
 </resources>

@@ -31,7 +31,7 @@ public class Supporter extends GameObject{
                 break;
             case LIGHTNING_SUPPORTER:
                 speed = 4.0f;
-                attackSpeed = 0.5f;
+                attackSpeed = 5.0f;
                 break;
             default:
                 speed = 0.0f;

@@ -4,11 +4,15 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
+import com.laivy.the.shape.R;
 import com.laivy.the.shape.framework.GameObject;
 import com.laivy.the.shape.framework.Metrics;
 import com.laivy.the.shape.game.GameScene;
 
 public class PlayTimer extends GameObject {
+    private static final float EXPBAR_HEIGHT =
+            Metrics.width * Metrics.getFloat(R.dimen.EXPBAR_WIDTH) * Metrics.getFloat(R.dimen.EXPBAR_HEIGHT);
+
     public PlayTimer() { }
 
     @Override
@@ -28,8 +32,8 @@ public class PlayTimer extends GameObject {
         text += sec;
 
         paint.setColor(Color.WHITE);
-        paint.setTextSize(30);
+        paint.setTextSize(Metrics.height * 0.04f);
         paint.setTextAlign(Paint.Align.CENTER);
-        canvas.drawText(text, Metrics.width / 2.0f, Metrics.height * 0.07f, paint);
+        canvas.drawText(text, Metrics.width / 2.0f, EXPBAR_HEIGHT * 2.5f, paint);
     }
 }
