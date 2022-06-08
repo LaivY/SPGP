@@ -21,7 +21,7 @@ public class LightningBullet extends Bullet {
         sprite.setBitmapWidth(sprite.getBitmapWidth() * 2.0f);
         sprite.setBitmapHeight(sprite.getBitmapHeight() * 2.0f);
         sprite.setPosition(position.x, position.y);
-        sprite.setDamage((int) Math.ceil(GameScene.getInstance().getPlayer().getDamage() / 3.0f));
+        sprite.setDamage((int) Math.ceil(GameScene.getInstance().getPlayer().getDamage() / 2.0f));
         GameScene.getInstance().add(GameScene.eLayer.SPRITE, sprite);
     }
 }

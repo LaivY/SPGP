@@ -11,7 +11,7 @@ import java.util.HashMap;
 public class Audio {
     private static MediaPlayer mediaPlayer;
     private static SoundPool soundPool;
-    private static HashMap<Integer, Integer> soundIds = new HashMap<>();
+    private static final HashMap<Integer, Integer> soundIds = new HashMap<>();
 
     // 초기화
     public static void init() {

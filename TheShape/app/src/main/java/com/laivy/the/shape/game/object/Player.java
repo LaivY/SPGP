@@ -21,30 +21,29 @@ import com.laivy.the.shape.game.ui.TextObject;
 import java.util.ArrayList;
 
 public class Player extends GameObject {
-    private final float MAX_ROTATE_DEGREE = 180.0f;
     private boolean isMove;
-    private int maxHp;
+    private final int maxHp;
     private int hp;
     private int def;
     private int exp;
-    private int[] reqExp;
+    private final int[] reqExp;
     private int level;
     private int damage;
-    private float attackSpeed;
+    private final float attackSpeed;
     private float bonusAttackSpeed;
     private float attackTimer;
     private float targetRotateDegree;
     private float currRotateDegree;
-    private float speed;
+    private final float speed;
     private float bonusSpeed;
     private float invincibleTime;
     private float knockBackDuration;
     private float knockBackTimer;
     private float knockBackPower;
     private PointF knockBackDirection;
-    private PointF direction;
-    private HPBar hpBar;
-    private ArrayList<Relic> relics;
+    private final PointF direction;
+    private final HPBar hpBar;
+    private final ArrayList<Relic> relics;
 
     public Player() {
         // 컨트롤러로 조종 중인지
@@ -145,7 +144,7 @@ public class Player extends GameObject {
         addDamage(1);
 
         // 보상 UI 생성, 게임 일시 정지
-        if (level >= 2 && level % 2 == 0 && relics.size() <= Relic.RELIC_COUNT - 3) {
+        if (relics.size() <= Relic.RELIC_COUNT - 3) {
             Reward reward = new Reward(Metrics.width * 0.2f, Metrics.height * 0.5f);
             GameScene.getInstance().add(GameScene.eLayer.UI, reward);
             GameScene.getInstance().setRunning(false);
@@ -369,9 +368,6 @@ public class Player extends GameObject {
             case Relic.BOTTLED_FLAME:
                 GameScene.getInstance().add(GameScene.eLayer.PLAYER, new Supporter(Supporter.FLAME_SUPPORTER));
                 break;
-//            case Relic.BOTTLED_TORNADO:
-//                GameScene.getInstance().add(GameScene.eLayer.PLAYER, new Supporter(Supporter.TORNADO_SUPPORTER));
-//                break;
             case Relic.BOTTLED_LIGHTNING:
                 GameScene.getInstance().add(GameScene.eLayer.PLAYER, new Supporter(Supporter.LIGHTNING_SUPPORTER));
                 break;
@@ -381,7 +377,7 @@ public class Player extends GameObject {
         relic.setBitmapHeight(Metrics.width * 0.08f);
         relic.setPosition(
                 (relic.getBitmapWidth() / 2.0f) + (relics.size() % 5 * relic.getBitmapWidth() / 2.0f),
-                relic.getBitmapHeight() / 2.0f + (relics.size() / 5 * relic.getBitmapHeight() / 2.0f)
+                relic.getBitmapHeight() / 2.0f + (relics.size() / 5.0f * relic.getBitmapHeight() / 2.0f)
         );
         relics.add(relic);
 
@@ -410,10 +406,6 @@ public class Player extends GameObject {
 
     public int getReqExp() {
         return reqExp[ Math.min(reqExp.length - 1, level - 1)];
-    }
-
-    public int getLevel() {
-        return level;
     }
 
     public float getInvincibleTime() {
@@ -472,6 +464,8 @@ public class Player extends GameObject {
 
     private void processRotation(float deltaTime) {
         int sign = (int) (targetRotateDegree / Math.abs(targetRotateDegree));
+
+        float MAX_ROTATE_DEGREE = 180.0f; // 1프레임 당 회전할 수 있는 최대 각도
         currRotateDegree += sign * MAX_ROTATE_DEGREE * deltaTime;
         targetRotateDegree += -sign * MAX_ROTATE_DEGREE * deltaTime;
 

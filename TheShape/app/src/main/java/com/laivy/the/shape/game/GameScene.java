@@ -6,14 +6,12 @@ import android.view.MotionEvent;
 import com.laivy.the.shape.R;
 import com.laivy.the.shape.framework.Audio;
 import com.laivy.the.shape.framework.GameObject;
-import com.laivy.the.shape.framework.Metrics;
 import com.laivy.the.shape.game.object.Background;
-import com.laivy.the.shape.game.object.Supporter;
-import com.laivy.the.shape.game.system.CollisionChecker;
-import com.laivy.the.shape.game.ui.Controller;
-import com.laivy.the.shape.game.system.EnemyGenerator;
-import com.laivy.the.shape.game.ui.ExpBar;
 import com.laivy.the.shape.game.object.Player;
+import com.laivy.the.shape.game.system.CollisionChecker;
+import com.laivy.the.shape.game.system.EnemyGenerator;
+import com.laivy.the.shape.game.ui.Controller;
+import com.laivy.the.shape.game.ui.ExpBar;
 import com.laivy.the.shape.game.ui.PlayTimer;
 import com.laivy.the.shape.game.ui.Result;
 
@@ -123,7 +121,6 @@ public class GameScene {
 
         // 카메라
         camera = new Camera();
-        camera.setPlayer(player);
 
         // 배경
         Background background = new Background();

@@ -4,7 +4,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PointF;
 import android.graphics.RectF;
-import android.util.Log;
 
 import com.laivy.the.shape.R;
 import com.laivy.the.shape.framework.Audio;
@@ -22,8 +21,8 @@ public class Enemy extends GameObject {
     private float knockBackDuration;
     private float knockBackTimer;
     private float knockBackPower;
-    private PointF knockBackDirection;
-    private PointF direction;
+    private final PointF knockBackDirection;
+    private final PointF direction;
 
     public Enemy() {
         hp = 10;
@@ -82,7 +81,7 @@ public class Enemy extends GameObject {
             TextObject damageText = new TextObject();
             damageText.setColor(Color.WHITE);
             damageText.setTextSize(Metrics.height * Metrics.getFloat(R.dimen.FONT_SIZE));
-            damageText.setText(Integer.toString(GameScene.getInstance().getPlayer().getDamage()));
+            damageText.setText(Integer.toString(((SplashSprite) object).getDamage()));
             damageText.setLifeTime(0.5f);
             damageText.setPosition(position.x, position.y - getBitmapHeight());
             GameScene.getInstance().add(GameScene.eLayer.TEXT, damageText);
@@ -99,18 +98,15 @@ public class Enemy extends GameObject {
         }
         else if (object instanceof Relic) {
             Relic relic = (Relic) object;
-            switch (relic.getId())
-            {
-                case 2:
-                    hp -= GameScene.getInstance().getPlayer().getDamage();
-                    TextObject damageText = new TextObject();
-                    damageText.setColor(Color.WHITE);
-                    damageText.setTextSize(Metrics.height * Metrics.getFloat(R.dimen.FONT_SIZE));
-                    damageText.setText(Integer.toString(GameScene.getInstance().getPlayer().getDamage()));
-                    damageText.setLifeTime(0.5f);
-                    damageText.setPosition(position.x, position.y - getBitmapHeight());
-                    GameScene.getInstance().add(GameScene.eLayer.TEXT, damageText);
-                    break;
+            if (relic.getId() == Relic.BRONZE_SCALES) {
+                hp -= GameScene.getInstance().getPlayer().getDamage();
+                TextObject damageText = new TextObject();
+                damageText.setColor(Color.WHITE);
+                damageText.setTextSize(Metrics.height * Metrics.getFloat(R.dimen.FONT_SIZE));
+                damageText.setText(Integer.toString(GameScene.getInstance().getPlayer().getDamage()));
+                damageText.setLifeTime(0.5f);
+                damageText.setPosition(position.x, position.y - getBitmapHeight());
+                GameScene.getInstance().add(GameScene.eLayer.TEXT, damageText);
             }
         }
 

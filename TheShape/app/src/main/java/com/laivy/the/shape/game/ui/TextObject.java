@@ -7,7 +7,7 @@ import com.laivy.the.shape.framework.GameObject;
 import com.laivy.the.shape.game.GameScene;
 
 public class TextObject extends GameObject {
-    private Paint paint;
+    private final Paint paint;
     private String text;
     private float lifeTime;
     private float timer;

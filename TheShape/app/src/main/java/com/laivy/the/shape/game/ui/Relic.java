@@ -5,8 +5,6 @@ import android.view.MotionEvent;
 
 import com.laivy.the.shape.R;
 import com.laivy.the.shape.framework.GameObject;
-import com.laivy.the.shape.game.GameScene;
-import com.laivy.the.shape.game.object.Supporter;
 
 public class Relic extends GameObject {
     // 유물 총 개수, 각 유물 id 설정
@@ -31,9 +29,9 @@ public class Relic extends GameObject {
     public static final int BOTTLED_LIGHTNING   = 17;
     public static final int NUCLEAR_BATTERY     = 18;
 
-    private int id;
-    private String name;
-    private String desc;
+    private final int id;
+    private final String name;
+    private final String desc;
     private boolean isActive;
 
     public Relic(int id) {
@@ -77,7 +75,7 @@ public class Relic extends GameObject {
             case GAMBLING_CHIP:
                 setBitmap(R.mipmap.gambling_chip);
                 name = "도박 칩";
-                desc = "각 총알의 공격력에 -2 ~ +3 값이 더해짐";
+                desc = "각 총알의 공격력에\r\n-2 ~ +3 값이 더해짐";
                 break;
             case WING_BOOTS:
                 setBitmap(R.mipmap.wing_boots);

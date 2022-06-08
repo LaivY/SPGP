@@ -95,12 +95,12 @@ public class Supporter extends GameObject{
         Player player = GameScene.getInstance().getPlayer();
         PointF direction = player.getDirection();
 
-        Bullet bullet = null;
+        Bullet bullet;
         switch (type) {
             case FLAME_SUPPORTER:
                 bullet = new FlameBullet();
                 bullet.setBitmap(R.mipmap.flame_bullet);
-                bullet.setDamage((int) Math.ceil(player.getDamage() / 3.0f));
+                bullet.setDamage((int) Math.ceil(player.getDamage() / 2.0f));
                 break;
             case TORNADO_SUPPORTER:
                 bullet = new Bullet();

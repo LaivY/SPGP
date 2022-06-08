@@ -15,15 +15,8 @@ import com.laivy.the.shape.game.object.Player;
 import java.util.ArrayList;
 
 public class Reward extends GameObject {
-    /*
-    이 객체는 3개의 사각형을 갖고 있고 중복되지 않는 서로 다른 보상을 갖고있다.
-    3개의 사각형 중 하나라도 선택됬다면 게임을 진행시키고 이 객체를 삭제한다.
-    */
-    private final float REWARD_UI_INTERVAL = 0.05f;
-    private Relic[] relics;
-    private RectF[] rects;
-    private float width;
-    private float height;
+    private final Relic[] relics;
+    private final RectF[] rects;
 
     public Reward(float width, float height) {
         // 중복없이 3개의 보상 선택
@@ -65,6 +58,11 @@ public class Reward extends GameObject {
 
         // 유물 객체 생성
         relics = new Relic[3];
+        /*
+    이 객체는 3개의 사각형을 갖고 있고 중복되지 않는 서로 다른 보상을 갖고있다.
+    3개의 사각형 중 하나라도 선택됬다면 게임을 진행시키고 이 객체를 삭제한다.
+    */
+        float REWARD_UI_INTERVAL = 0.05f;
         for (int i = 0; i < 3; ++i) {
             relics[i] = new Relic(relicIds[i]);
             relics[i].setBitmapWidth(Metrics.width * 0.1f);
@@ -79,8 +77,6 @@ public class Reward extends GameObject {
         }
 
         // 파라미터로 받는 width, height 는 보상 칸 하나의 가로, 세로 길이
-        this.width = width;
-        this.height = height;
 
         rects = new RectF[3];
         for (int i = 0; i < 3; ++i)

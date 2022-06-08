@@ -2,7 +2,6 @@ package com.laivy.the.shape.framework;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PointF;
@@ -76,13 +75,6 @@ public class GameObject {
             float width = hitBox.width();
             float height = hitBox.height();
             hitBox.offsetTo(x - width / 2.0f, y - height / 2.0f);
-        }
-    }
-
-    public void move(float x, float y) {
-        position.offset(x, y);
-        if (hitBox != null) {
-            hitBox.offset(x, y);
         }
     }
 

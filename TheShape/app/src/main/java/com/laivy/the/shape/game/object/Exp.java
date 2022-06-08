@@ -10,7 +10,7 @@ import com.laivy.the.shape.game.GameScene;
 import com.laivy.the.shape.game.ui.Relic;
 
 public class Exp extends GameObject {
-    private int exp;
+    private final int exp;
 
     public Exp() {
         exp = 1;

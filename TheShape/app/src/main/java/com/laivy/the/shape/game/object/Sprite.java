@@ -10,16 +10,16 @@ import com.laivy.the.shape.game.GameScene;
 import java.util.ArrayList;
 
 public class Sprite extends GameObject {
-    private ArrayList<Bitmap> images;
-    private boolean onlyOnce;
-    private float interval;
+    private final ArrayList<Bitmap> images;
+    private final float interval;
     private float timer;
+    private boolean isOnlyOnce;
 
     public Sprite() {
         images = new ArrayList<>();
-        onlyOnce = false;
         interval = 1.0f / 30.0f;
         timer = 0.0f;
+        isOnlyOnce = false;
     }
 
     @Override
@@ -28,7 +28,7 @@ public class Sprite extends GameObject {
 
         int frame = (int) (timer / interval);
         if (frame >= images.size()) {
-            if (onlyOnce) {
+            if (isOnlyOnce) {
                 GameScene.getInstance().remove(GameScene.eLayer.SPRITE, this);
                 return;
             }
@@ -37,7 +37,6 @@ public class Sprite extends GameObject {
         }
         bitmap = images.get(frame);
         timer += deltaTime;
-
         super.update(deltaTime);
     }
 
@@ -54,10 +53,7 @@ public class Sprite extends GameObject {
     }
 
     public void setOnlyOnce(boolean onlyOnce) {
-        this.onlyOnce = onlyOnce;
+        this.isOnlyOnce = onlyOnce;
     }
 
-    public void setInterval(float interval) {
-        this.interval = interval;
-    }
 }

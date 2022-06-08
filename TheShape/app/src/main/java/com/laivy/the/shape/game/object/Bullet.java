@@ -5,7 +5,6 @@ import android.graphics.PointF;
 import android.graphics.RectF;
 
 import com.laivy.the.shape.R;
-import com.laivy.the.shape.framework.Audio;
 import com.laivy.the.shape.framework.GameObject;
 import com.laivy.the.shape.game.GameScene;
 
@@ -13,8 +12,8 @@ public class Bullet extends GameObject {
     private int damage;
     protected float lifeTime;
     private float degree;
-    private float speed;
-    private PointF direction;
+    private final float speed;
+    private final PointF direction;
 
     public Bullet() {
         damage = 1;

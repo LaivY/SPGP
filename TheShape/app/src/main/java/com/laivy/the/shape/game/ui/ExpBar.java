@@ -16,7 +16,6 @@ public class ExpBar extends GameObject {
     private final RectF base;
     private final RectF bar;
     private final float width;
-    private final float height;
     private int playerExp;
     private float exp;
     private float delta;
@@ -24,7 +23,8 @@ public class ExpBar extends GameObject {
     public ExpBar() {
         barPaint = new Paint();
         width = Metrics.width * Metrics.getFloat(R.dimen.EXPBAR_WIDTH);
-        height = width * Metrics.getFloat(R.dimen.EXPBAR_HEIGHT);
+
+        float height = width * Metrics.getFloat(R.dimen.EXPBAR_HEIGHT);
         base = new RectF(-width / 2.0f, 0.0f, width / 2.0f, height);
         base.offset(Metrics.width / 2.0f, 0.0f);
         bar = new RectF(-width / 2.0f, 0.0f, -width / 2.0f, height);
