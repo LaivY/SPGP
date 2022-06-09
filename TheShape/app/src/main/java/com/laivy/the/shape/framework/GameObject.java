@@ -22,9 +22,8 @@ public class GameObject {
     public GameObject() {
         if (paint == null)
             paint = new Paint();
-        if (matrix == null) {
+        if (matrix == null)
             matrix = new Matrix();
-        }
         isValid = true;
         bitmap = null;
         bitmapWidth = 0.0f;

@@ -14,7 +14,7 @@ public class EnemyGenerator extends GameObject {
     private float spawnTime;
     private float timer;
     private float enemyHp;
-    private int enemyDamage;
+    private float enemyDamage;
     private float enemySpeed;
 
     public EnemyGenerator() {
@@ -22,13 +22,18 @@ public class EnemyGenerator extends GameObject {
         spawnTime = 3.0f;
         timer = 3.0f;
         enemyHp = 10;
-        enemyDamage = 10;
+        enemyDamage = 5.0f;
         enemySpeed = 80.0f;
     }
 
     @Override
     public void update(float deltaTime) {
         updateEnemyStats();
+
+        // 최대 생성 개수 제한
+        if (GameScene.getInstance().getLayer(GameScene.eLayer.ENEMY).size() > 30)
+            return;
+
         if (timer >= spawnTime) {
             spawnEnemy();
             timer = 0.0f;
@@ -43,8 +48,8 @@ public class EnemyGenerator extends GameObject {
             lastChangedTime = (int) playTime;
 
             spawnTime   *= 0.95f;
-            enemyHp     *= 1.2f;
-            enemyDamage *= 1.1f;
+            enemyHp     *= 1.1f;
+            enemyDamage *= 1.05f;
             enemySpeed  *= 1.05f;
         }
     }
@@ -54,10 +59,10 @@ public class EnemyGenerator extends GameObject {
         int maxSpawnCount = lastChangedTime / 30 + 1;
         maxSpawnCount = Utility.getRandom(1, maxSpawnCount);
 
-        // 몬스터의 크기. 플레이 타임이 3분일때 최대 2배가 될 수 있음
+        // 몬스터의 크기. 플레이 타임이 3분일때 최대 1.5배가 될 수 있음
         float maxSpawnScale = 1.0f;
         if (Utility.getRandom(1, 100) < Math.min(90, lastChangedTime / 2))
-            maxSpawnScale = Math.min(2.0f, lastChangedTime / 180.0f + 1.0f);
+            maxSpawnScale = Math.min(1.5f, lastChangedTime / 180.0f + 1.0f);
 
         for (int i = 0; i < maxSpawnCount; ++i) {
             int type = Utility.getRandom(0, 1);
@@ -71,7 +76,7 @@ public class EnemyGenerator extends GameObject {
             enemy.setBitmap(type == 0 ? R.mipmap.rect : R.mipmap.circle);
             enemy.setPosition(playerPosition.x + x, playerPosition.y + y);
             enemy.setHp((int) enemyHp);
-            enemy.setDamage(enemyDamage);
+            enemy.setDamage((int) enemyDamage);
             enemy.setSpeed(enemySpeed);
             enemy.setScale(Utility.getRandom(1.0f, maxSpawnScale));
             GameScene.getInstance().add(GameScene.eLayer.ENEMY, enemy);

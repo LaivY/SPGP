@@ -88,7 +88,6 @@ public class Player extends GameObject {
 
         // 유물들
         relics = new ArrayList<>();
-        addRelic(new Relic(Relic.NUCLEAR_BATTERY));
     }
 
     @Override
@@ -377,7 +376,7 @@ public class Player extends GameObject {
         relic.setBitmapHeight(Metrics.width * 0.08f);
         relic.setPosition(
                 (relic.getBitmapWidth() / 2.0f) + (relics.size() % 5 * relic.getBitmapWidth() / 2.0f),
-                relic.getBitmapHeight() / 2.0f + (relics.size() / 5.0f * relic.getBitmapHeight() / 2.0f)
+                relic.getBitmapHeight() / 2.0f + (relics.size() / 5 * relic.getBitmapHeight() / 2.0f)
         );
         relics.add(relic);
 

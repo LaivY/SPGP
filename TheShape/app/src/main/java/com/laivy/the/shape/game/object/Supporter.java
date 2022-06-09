@@ -31,7 +31,7 @@ public class Supporter extends GameObject{
                 break;
             case LIGHTNING_SUPPORTER:
                 speed = 4.0f;
-                attackSpeed = 5.0f;
+                attackSpeed = 1.0f;
                 break;
             default:
                 speed = 0.0f;
@@ -45,6 +45,8 @@ public class Supporter extends GameObject{
     @Override
     public void update(float deltaTime) {
         Player player = GameScene.getInstance().getPlayer();
+        if (player.getHp() <= 0) return;
+
         PointF playerPosition = player.getPosition();
 
         float targetX = playerPosition.x + player.getBitmapWidth() * 0.7f;
