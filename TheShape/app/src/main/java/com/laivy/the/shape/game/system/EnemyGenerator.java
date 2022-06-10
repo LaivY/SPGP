@@ -31,8 +31,8 @@ public class EnemyGenerator extends GameObject {
         updateEnemyStats();
 
         // 최대 생성 개수 제한
-        if (GameScene.getInstance().getLayer(GameScene.eLayer.ENEMY).size() > 30)
-            return;
+//        if (GameScene.getInstance().getLayer(GameScene.eLayer.ENEMY).size() > 30)
+//            return;
 
         if (timer >= spawnTime) {
             spawnEnemy();
